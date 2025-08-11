@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:jdan.github.io)",
+      "WebFetch(domain:github.com)",
+      "Bash(mkdir:*)",
+      "Bash(bun install:*)",
+      "Bash(bun run:*)",
+      "Bash(bunx tsc:*)",
+      "Bash(bunx vite:*)"
+    ],
+    "deny": []
+  }
+}

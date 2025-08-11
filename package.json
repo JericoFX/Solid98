@@ -1,0 +1,65 @@
+{
+  "name": "solid-98css",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "SolidJS wrapper components for 98.css Windows 98 UI framework",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "bunx --bun vite",
+    "build": "bunx --bun vite build && bunx tsc --emitDeclarationOnly",
+    "build:lib": "bunx --bun vite build --mode lib && bunx tsc --emitDeclarationOnly",
+    "preview": "bunx --bun vite preview",
+    "typecheck": "bunx tsc --noEmit",
+    "lint": "bunx eslint src/**/*.{ts,tsx}",
+    "prepublishOnly": "bun run build:lib"
+  },
+  "keywords": [
+    "solidjs",
+    "98css",
+    "windows98",
+    "ui",
+    "components",
+    "css",
+    "framework",
+    "retro",
+    "vintage"
+  ],
+  "author": "JericoFX",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JericoFX/solid98.git"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.8.0"
+  },
+  "dependencies": {
+    "98.css": "^0.1.20",
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "@solidjs/testing-library": "^0.8.10",
+    "@types/node": "^24.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0",
+    "playwright": "^1.54.2",
+    "solid-js": "^1.9.7",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6",
+    "vite-plugin-solid": "^2.11.8"
+  }
+}

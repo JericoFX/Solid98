@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solid98 - SolidJS + 98.css Components Playground</title>
+    <!-- 98.css CDN as fallback -->
+    <link rel="stylesheet" href="https://unpkg.com/98.css@0.1.20/dist/98.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #c3c3c3;
+        font-family: 'MS Sans Serif', sans-serif;
+      }
+      
+      .playground-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      
+      .demo-section {
+        background: #c3c3c3;
+        padding: 20px;
+        border: 1px solid #868686;
+        border-radius: 2px;
+      }
+      
+      .demo-title {
+        margin: 0 0 15px 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #000;
+      }
+    </style>
+    <script type="module" crossorigin src="/solid98/assets/index-B77RC19b.js"></script>
+    <link rel="stylesheet" crossorigin href="/solid98/assets/index-CA_QPnKf.css">
+  </head>
+  <body>
+    <h1>Solid98 Playground - Windows 98 UI Components</h1>
+    <p>SolidJS wrapper components for the 98.css framework</p>
+    
+    <div id="root"></div>
+  </body>
+</html>
