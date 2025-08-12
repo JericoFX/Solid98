@@ -46,6 +46,62 @@ export default function App() {
   const [infoAlert, setInfoAlert] = createSignal(false);
   const [confirmAlert, setConfirmAlert] = createSignal(false);
   
+  // File Explorer states
+  const [currentPath, setCurrentPath] = createSignal('');
+  const [viewMode, setViewMode] = createSignal<'icons' | 'details'>('icons');
+  
+  // Sample file system data
+  const fileSystemData: Record<string, any[]> = {
+    '': [ // Root (My Computer)
+      { name: 'Documents', type: 'folder', modified: new Date('2024-01-15') },
+      { name: 'Pictures', type: 'folder', modified: new Date('2024-01-10') },
+      { name: 'Program Files', type: 'folder', modified: new Date('2024-01-01') },
+      { name: 'Windows', type: 'folder', modified: new Date('2024-01-01') },
+      { name: 'autoexec.bat', type: 'file', size: 256, modified: new Date('1998-12-07') },
+      { name: 'config.sys', type: 'file', size: 128, modified: new Date('1998-12-07') }
+    ],
+    'Documents': [
+      { name: 'Letters', type: 'folder', modified: new Date('2024-01-12') },
+      { name: 'Projects', type: 'folder', modified: new Date('2024-01-14') },
+      { name: 'readme.txt', type: 'file', size: 1024, modified: new Date('2024-01-10') },
+      { name: 'report.doc', type: 'file', size: 15360, modified: new Date('2024-01-08') }
+    ],
+    'Documents/Letters': [
+      { name: 'to_mom.txt', type: 'file', size: 512, modified: new Date('2024-01-05') },
+      { name: 'business.doc', type: 'file', size: 2048, modified: new Date('2024-01-03') }
+    ],
+    'Documents/Projects': [
+      { name: 'Website', type: 'folder', modified: new Date('2024-01-14') },
+      { name: 'App', type: 'folder', modified: new Date('2024-01-12') },
+      { name: 'notes.txt', type: 'file', size: 768, modified: new Date('2024-01-11') }
+    ],
+    'Pictures': [
+      { name: 'Vacation', type: 'folder', modified: new Date('2024-01-08') },
+      { name: 'Family', type: 'folder', modified: new Date('2024-01-06') },
+      { name: 'sunset.jpg', type: 'file', size: 1024000, modified: new Date('2024-01-07') },
+      { name: 'beach.png', type: 'file', size: 2048000, modified: new Date('2024-01-05') }
+    ],
+    'Pictures/Vacation': [
+      { name: 'paris.jpg', type: 'file', size: 1536000, modified: new Date('2024-01-01') },
+      { name: 'rome.jpg', type: 'file', size: 1792000, modified: new Date('2024-01-02') },
+      { name: 'london.jpg', type: 'file', size: 1280000, modified: new Date('2024-01-03') }
+    ],
+    'Program Files': [
+      { name: 'Microsoft Office', type: 'folder', modified: new Date('1998-11-15') },
+      { name: 'Games', type: 'folder', modified: new Date('1998-12-01') },
+      { name: 'Accessories', type: 'folder', modified: new Date('1998-10-20') }
+    ],
+    'Windows': [
+      { name: 'System32', type: 'folder', modified: new Date('1998-12-07') },
+      { name: 'Fonts', type: 'folder', modified: new Date('1998-11-20') },
+      { name: 'notepad.exe', type: 'file', size: 49152, modified: new Date('1998-12-07') },
+      { name: 'calc.exe', type: 'file', size: 32768, modified: new Date('1998-12-07') }
+    ]
+  };
+  
+  // Get current directory data
+  const getCurrentData = () => fileSystemData[currentPath()] || [];
+  
   // Interaction logs
   const [interactionLog, setInteractionLog] = createSignal<string[]>([]);
   
@@ -163,6 +219,16 @@ export default function App() {
     addLog(`Closed explorer window: ${windowId}`);
   };
   
+  // File Explorer handlers
+  const handleNavigate = (path: string, item: any) => {
+    setCurrentPath(path);
+    addLog(`Navigated to: ${path || 'My Computer'} (${item.name})`);
+  };
+
+  const handleFileSelect = (item: any, selectedItems: string[]) => {
+    addLog(`Selected: ${item.name} (${selectedItems.length} items total)`);
+  };
+
   const handleFileOpen = (item: any) => {
     addLog(`File opened: ${item.name}`);
     
@@ -179,6 +245,10 @@ export default function App() {
     } else {
       alert(`Opening file: ${item.name}\n\nType: ${item.type}\nPath: ${item.path || 'Unknown'}`);
     }
+  };
+
+  const handleSearchChange = (searchTerm: string, filteredItems: any[]) => {
+    addLog(`Search: "${searchTerm}" found ${filteredItems.length} items`);
   };
 
   return (
@@ -645,36 +715,31 @@ export default function App() {
         <h3 class="demo-title">Windows 98 Applications</h3>
         
         <div style={{ display: 'grid', 'grid-template-columns': '1fr 1fr', gap: '20px', 'margin-bottom': '20px' }}>
-          <div style={{ height: '400px' }}>
-            <h4>File Explorer (Windows 98) with Navigation</h4>
-            <Window title="My Computer - File Explorer" active>
+          <div style={{ height: '450px' }}>
+            <h4>File Explorer (Recreated from Guide)</h4>
+            <div style={{ 'margin-bottom': '8px', display: 'flex', gap: '8px', 'align-items': 'center' }}>
+              <Button 
+                onClick={() => setViewMode(viewMode() === 'icons' ? 'details' : 'icons')}
+                variant={viewMode() === 'icons' ? 'default' : undefined}
+              >
+                {viewMode() === 'icons' ? '📋 Details' : '📁 Icons'} View
+              </Button>
+              <span style={{ 'font-size': '10px', color: '#666' }}>
+                Current: {currentPath() || 'My Computer'}
+              </span>
+            </div>
+            <Window title={`${currentPath() || 'My Computer'} - File Explorer`} active>
               <FileExplorer
-                enableNavigation={true}
-                viewMode="details"
+                data={getCurrentData()}
+                currentPath={currentPath()}
+                viewMode={viewMode()}
+                showSearch={true}
+                searchPlaceholder="Search files..."
                 height="320px"
-                currentPath=""
-                onNavigate={(path, item) => {
-                  addLog(`File Explorer: Navigated to ${path || 'My Computer'}`);
-                }}
-                onFileSelect={(item, selectedItems) => {
-                  addLog(`File Explorer: Selected ${item.name}`);
-                }}
-                onFileOpen={(item) => {
-                  addLog(`File Explorer: Opened ${item.name}`);
-                  if (item.name.toLowerCase().includes('.jpg') || 
-                      item.name.toLowerCase().includes('.png') || 
-                      item.name.toLowerCase().includes('.gif')) {
-                    alert(`Opening image: ${item.name}\n\nIn a real app, this would open the Image Viewer.`);
-                  } else {
-                    alert(`Opening file: ${item.name}`);
-                  }
-                }}
-                onSearchChange={(searchTerm, filteredItems) => {
-                  addLog(`File Explorer: Search "${searchTerm}" found ${filteredItems.length} items`);
-                }}
-                onPathChange={(path) => {
-                  addLog(`File Explorer: Path changed to ${path || 'My Computer'}`);
-                }}
+                onNavigate={handleNavigate}
+                onFileSelect={handleFileSelect}
+                onFileOpen={handleFileOpen}
+                onSearchChange={handleSearchChange}
               />
             </Window>
           </div>
@@ -702,32 +767,46 @@ export default function App() {
             />
           </div>
           
-          <div style={{ height: '400px' }}>
-            <h4>File Explorer Features</h4>
-            <div style="background: #c0c0c0; border: 2px inset; padding: 16px; height: 100%; font-size: 11px;">
-              <p><strong>Navigation:</strong></p>
+          <div style={{ height: '450px' }}>
+            <h4>FileExplorer Features (Recreated)</h4>
+            <div style="background: #c0c0c0; border: 2px inset; padding: 16px; height: 100%; font-size: 11px; overflow-y: auto;">
+              <p><strong>✅ Recreated Following Guide:</strong></p>
               <ul>
-                <li>My Documents → Letters, Projects, files</li>
-                <li>My Pictures → Vacation, Family folders</li>
-                <li>Desktop → Shortcuts and temp files</li>
-                <li>Program Files → Software folders</li>
-                <li>Windows → System folders</li>
+                <li>Exact HTML structure with xp- CSS classes</li>
+                <li>Props match guide specification exactly</li>
+                <li>Windows 98 authentic styling (no gradients)</li>
+                <li>MS Sans Serif font, classic color palette</li>
               </ul>
               
-              <p><strong>Search Features:</strong></p>
+              <p><strong>🗂️ Navigation Paths Available:</strong></p>
               <ul>
-                <li>Use Search bar to filter current folder items</li>
-                <li>Works for both files and folders</li>
-                <li>Case-insensitive partial matching</li>
-                <li>Search clears when navigating folders</li>
-                <li>Status bar shows search results count</li>
+                <li><strong>My Computer</strong> → Documents, Pictures, Program Files, Windows</li>
+                <li><strong>Documents</strong> → Letters, Projects, files</li>
+                <li><strong>Documents/Letters</strong> → Personal files</li>
+                <li><strong>Documents/Projects</strong> → Website, App folders</li>
+                <li><strong>Pictures</strong> → Vacation, Family + image files</li>
+                <li><strong>Pictures/Vacation</strong> → Travel photos</li>
+                <li><strong>Program Files</strong> → Microsoft Office, Games, Accessories</li>
+                <li><strong>Windows</strong> → System32, Fonts, system executables</li>
               </ul>
               
-              <p><strong>Interactions:</strong></p>
+              <p><strong>🔍 Features:</strong></p>
               <ul>
-                <li>Click to select, Ctrl+click for multi-select</li>
-                <li>Double-click folders to navigate</li>
-                <li>Click images to view full size modal!</li>
+                <li>Breadcrumb navigation (clickable path)</li>
+                <li>Up button navigation</li>
+                <li>Search with real-time filtering</li>
+                <li>Icons/Details view toggle</li>
+                <li>File selection with Ctrl+click multi-select</li>
+                <li>Status bar with counts and selection info</li>
+              </ul>
+              
+              <p><strong>🎯 Test Navigation:</strong></p>
+              <ul>
+                <li>Double-click <strong>Documents</strong> folder</li>
+                <li>Click breadcrumb items to go back</li>
+                <li>Try the Up ⬆ button</li>
+                <li>Search for "jpg" to find images</li>
+                <li>Toggle between Icons/Details view</li>
               </ul>
             </div>
           </div>
