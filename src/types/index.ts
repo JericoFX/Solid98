@@ -83,7 +83,7 @@ export interface ProgressBarProps extends BaseComponentProps {
   segmented?: boolean;
 }
 
-export interface SunkenPanelProps extends BaseComponentProps {
+export interface SunkenPanelProps extends BaseComponentProps, Omit<JSX.HTMLAttributes<HTMLDivElement>, 'class'> {
   interactive?: boolean;
 }
 

@@ -20,7 +20,10 @@ import {
   showError,
   showWarning,
   showInfo,
-  showConfirm
+  showConfirm,
+  FileExplorer,
+  ImageViewer,
+  Notepad
 } from '../index';
 import { TreeNode, TableColumn } from '../types';
 import './App.css';
@@ -492,6 +495,76 @@ export default function App() {
           
           <StatusBar>Ready</StatusBar>
         </Window>
+      </div>
+
+      {/* Applications Demo */}
+      <div class="demo-section">
+        <h3 class="demo-title">Windows 98 Applications</h3>
+        
+        <div style={{ display: 'grid', 'grid-template-columns': '1fr 1fr', gap: '20px', 'margin-bottom': '20px' }}>
+          <div style={{ height: '400px' }}>
+            <h4>File Explorer</h4>
+            <FileExplorer title="My Computer" />
+          </div>
+          
+          <div style={{ height: '400px' }}>
+            <h4>Image Viewer (Multiple Images)</h4>
+            <ImageViewer title="Photo Gallery" />
+          </div>
+        </div>
+        
+        <div style={{ display: 'grid', 'grid-template-columns': '1fr 1fr', gap: '20px', 'margin-bottom': '20px' }}>
+          <div style={{ height: '400px' }}>
+            <h4>Single Image Viewer (No Carousel)</h4>
+            <ImageViewer 
+              title="Single Photo" 
+              images={[{
+                id: '1', 
+                name: 'single-photo.jpg', 
+                src: 'https://picsum.photos/800/600?random=99',
+                width: 800,
+                height: 600,
+                size: 345760,
+                modified: '12/16/2024'
+              }]}
+            />
+          </div>
+          
+          <div style={{ height: '400px' }}>
+            <h4>File Properties</h4>
+            <div style="background: #c0c0c0; border: 2px inset; padding: 16px; height: 100%;">
+              <p>Click on folders in File Explorer to navigate:</p>
+              <ul>
+                <li>My Documents → Letters, Projects, files</li>
+                <li>My Pictures → Vacation, Family folders</li>
+                <li>Desktop → Shortcuts and temp files</li>
+                <li>Program Files → Software folders</li>
+                <li>Windows → System folders</li>
+              </ul>
+              <br />
+              <p>Click images to view full size modal!</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style={{ height: '400px', 'margin-bottom': '20px' }}>
+          <h4>Notepad</h4>
+          <Notepad 
+            title="Untitled - Notepad" 
+            initialContent="Welcome to Windows 98 Notepad!
+
+This is a fully functional notepad application built with SolidJS and styled with 98.css.
+
+Features:
+• Text editing with word wrap
+• Find and replace functionality  
+• Status bar with line/column information
+• File operations (New, Open, Save)
+• Character and line counting
+
+Try typing some text, using the find feature, or toggling word wrap!"
+          />
+        </div>
       </div>
     </div>
   );
