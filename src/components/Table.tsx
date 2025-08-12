@@ -19,6 +19,7 @@ interface TableProps<T = any> {
   sortOrder?: 'asc' | 'desc';
   onSort?: (column: string) => void;
   onRowClick?: (item: T, index: number) => void;
+  onRowDoubleClick?: (item: T, index: number) => void;
   selectedRow?: number;
   class?: string;
   children?: JSX.Element;
@@ -43,6 +44,7 @@ export function Table<T = any>(props: TableProps<T>) {
     'sortOrder', 
     'onSort', 
     'onRowClick', 
+    'onRowDoubleClick',
     'selectedRow', 
     'class', 
     'children'
@@ -112,9 +114,10 @@ export function Table<T = any>(props: TableProps<T>) {
                   class={cn(
                     'win98-table-row',
                     local.selectedRow === index() && 'win98-table-row-selected',
-                    local.onRowClick && 'win98-table-row-clickable'
+                    (local.onRowClick || local.onRowDoubleClick) && 'win98-table-row-clickable'
                   )}
                   onClick={() => local.onRowClick?.(item, index())}
+                  onDblClick={() => local.onRowDoubleClick?.(item, index())}
                 >
                   <For each={local.columns}>
                     {(column) => (

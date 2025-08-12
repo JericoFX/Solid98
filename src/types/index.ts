@@ -89,6 +89,8 @@ export interface SunkenPanelProps extends BaseComponentProps {
 
 export interface TreeViewProps extends BaseComponentProps {
   data?: TreeNode[];
+  onNodeClick?: (node: TreeNode) => void;
+  onNodeDoubleClick?: (node: TreeNode) => void;
 }
 
 export interface TreeNode {
@@ -129,6 +131,7 @@ export interface TableProps<T = any> extends BaseComponentProps {
   sortOrder?: 'asc' | 'desc';
   onSort?: (column: string) => void;
   onRowClick?: (item: T, index: number) => void;
+  onRowDoubleClick?: (item: T, index: number) => void;
   selectedRow?: number;
 }
 
@@ -139,4 +142,18 @@ export interface ModalProps extends BaseComponentProps {
   showCloseButton?: boolean;
   width?: string | number;
   height?: string | number;
+}
+
+export type AlertType = 'error' | 'warning' | 'question' | 'info';
+
+export interface AlertProps extends BaseComponentProps {
+  open?: boolean;
+  type?: AlertType;
+  title?: string;
+  message: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  showCancel?: boolean;
 }

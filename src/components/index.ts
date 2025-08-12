@@ -13,3 +13,4 @@ export { TreeView } from './TreeView';
 export { Tabs, Tab } from './Tabs';
 export { Modal } from './Modal';
 export { Table, tableStyles } from './Table';
+export { Alert, showError, showWarning, showInfo, showConfirm } from './Alert';
