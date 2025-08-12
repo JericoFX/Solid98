@@ -246,3 +246,4 @@ docs/.vitepress/dist/
 # Auto-generated files
 auto-imports.d.ts
 components.d.ts
+.claude/settings.local.json

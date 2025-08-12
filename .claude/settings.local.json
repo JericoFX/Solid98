@@ -9,7 +9,10 @@
       "Bash(bunx tsc:*)",
       "Bash(bunx vite:*)",
       "Bash(git add:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(cp:*)",
+      "Bash(git restore:*)",
+      "Bash(bunx eslint:*)"
     ],
     "deny": []
   }
