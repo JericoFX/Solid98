@@ -110,3 +110,33 @@ export interface TabProps extends BaseComponentProps {
   label: string;
   selected?: boolean;
 }
+
+export interface TableColumn<T = any> {
+  key: string;
+  header: string;
+  width?: string | number;
+  sortable?: boolean;
+  render?: (value: any, item: T, index: number) => JSX.Element;
+}
+
+export interface TableProps<T = any> extends BaseComponentProps {
+  data?: T[];
+  columns?: TableColumn<T>[];
+  striped?: boolean;
+  bordered?: boolean;
+  hoverable?: boolean;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  onSort?: (column: string) => void;
+  onRowClick?: (item: T, index: number) => void;
+  selectedRow?: number;
+}
+
+export interface ModalProps extends BaseComponentProps {
+  open?: boolean;
+  title?: string;
+  onClose?: () => void;
+  showCloseButton?: boolean;
+  width?: string | number;
+  height?: string | number;
+}

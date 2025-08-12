@@ -13,9 +13,11 @@ import {
   SunkenPanel, 
   TreeView, 
   Tabs, 
-  Tab 
+  Tab,
+  Modal,
+  Table 
 } from '../index';
-import { TreeNode } from '../types';
+import { TreeNode, TableColumn } from '../types';
 import './App.css';
 
 export default function App() {
@@ -24,6 +26,10 @@ export default function App() {
   const [selectedTab, setSelectedTab] = createSignal('tab1');
   const [checkboxChecked, setCheckboxChecked] = createSignal(false);
   const [radioValue, setRadioValue] = createSignal('option1');
+  const [modalOpen, setModalOpen] = createSignal(false);
+  const [tableSelectedRow, setTableSelectedRow] = createSignal<number | undefined>(undefined);
+  const [tableSortBy, setTableSortBy] = createSignal<string>('');
+  const [tableSortOrder, setTableSortOrder] = createSignal<'asc' | 'desc'>('asc');
 
   const treeData: TreeNode[] = [
     {
@@ -44,6 +50,42 @@ export default function App() {
       ]
     }
   ];
+
+  interface FileData {
+    name: string;
+    type: string;
+    size: string;
+    modified: string;
+  }
+
+  const tableData: FileData[] = [
+    { name: 'autoexec.bat', type: 'MS-DOS Batch File', size: '1 KB', modified: '12/7/1998' },
+    { name: 'config.sys', type: 'System File', size: '2 KB', modified: '12/7/1998' },
+    { name: 'My Documents', type: 'File Folder', size: '—', modified: '1/15/1999' },
+    { name: 'Program Files', type: 'File Folder', size: '—', modified: '12/7/1998' },
+    { name: 'Windows', type: 'File Folder', size: '—', modified: '12/7/1998' },
+    { name: 'readme.txt', type: 'Text Document', size: '4 KB', modified: '11/20/1998' },
+  ];
+
+  const tableColumns: TableColumn<FileData>[] = [
+    { key: 'name', header: 'Name', sortable: true, width: '40%' },
+    { key: 'type', header: 'Type', sortable: true, width: '30%' },
+    { key: 'size', header: 'Size', sortable: true, width: '15%' },
+    { key: 'modified', header: 'Date Modified', sortable: true, width: '15%' }
+  ];
+
+  const handleTableSort = (column: string) => {
+    if (tableSortBy() === column) {
+      setTableSortOrder(tableSortOrder() === 'asc' ? 'desc' : 'asc');
+    } else {
+      setTableSortBy(column);
+      setTableSortOrder('asc');
+    }
+  };
+
+  const handleRowClick = (item: FileData, index: number) => {
+    setTableSelectedRow(tableSelectedRow() === index ? undefined : index);
+  };
 
   return (
     <div class="playground-container">
@@ -203,6 +245,66 @@ export default function App() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Table Demo */}
+      <div class="demo-section">
+        <h3 class="demo-title">Table Component</h3>
+        
+        <h4>File Manager Style Table</h4>
+        <Table
+          data={tableData}
+          columns={tableColumns}
+          striped
+          hoverable
+          sortBy={tableSortBy()}
+          sortOrder={tableSortOrder()}
+          onSort={handleTableSort}
+          onRowClick={handleRowClick}
+          selectedRow={tableSelectedRow()}
+        />
+        
+        <Button onClick={() => setTableSelectedRow(undefined)}>
+          Clear Selection
+        </Button>
+      </div>
+
+      {/* Modal Demo */}
+      <div class="demo-section">
+        <h3 class="demo-title">Modal Dialog</h3>
+        
+        <Button onClick={() => setModalOpen(true)}>
+          Open Dialog
+        </Button>
+        
+        <Modal
+          open={modalOpen()}
+          title="About Windows 98"
+          onClose={() => setModalOpen(false)}
+          width={400}
+          height={300}
+        >
+          <div style={{ padding: '10px' }}>
+            <p>Microsoft Windows 98 is a graphical operating system developed by Microsoft.</p>
+            <br />
+            <p>Key features include:</p>
+            <ul style={{ 'margin-left': '20px' }}>
+              <li>Enhanced Internet integration</li>
+              <li>USB support</li>
+              <li>FAT32 file system</li>
+              <li>Multiple display support</li>
+            </ul>
+            <br />
+            <FieldRow>
+              <Button variant="default" onClick={() => setModalOpen(false)}>
+                OK
+              </Button>
+              <Button onClick={() => setModalOpen(false)}>
+                Cancel
+              </Button>
+            </FieldRow>
+          </div>
+        </Modal>
       </div>
 
       {/* Complex Window Demo */}

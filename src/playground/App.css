@@ -68,6 +68,84 @@
   min-height: 60px;
 }
 
+/* Table component styles */
+.win98-table-container {
+  background: #fff;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  padding: 2px;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+.win98-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Pixelated MS Sans Serif", Arial;
+  font-size: 11px;
+  background: #fff;
+}
+
+.win98-table-bordered {
+  border: 1px solid #000;
+}
+
+.win98-table-header {
+  background: silver;
+  border: 1px outset silver;
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: bold;
+  position: relative;
+  user-select: none;
+}
+
+.win98-table-sortable {
+  cursor: pointer;
+}
+
+.win98-table-sortable:hover {
+  background: #dfdfdf;
+}
+
+.win98-table-sortable:active {
+  border: 1px inset silver;
+  background: #c0c7c8;
+}
+
+.win98-table-cell {
+  padding: 4px 8px;
+  border-right: 1px solid #dfdfdf;
+  border-bottom: 1px solid #dfdfdf;
+}
+
+.win98-table-row {
+  background: #fff;
+}
+
+.win98-table-striped .win98-table-row:nth-child(even) {
+  background: #f8f8f8;
+}
+
+.win98-table-row-clickable {
+  cursor: pointer;
+}
+
+.win98-table-hoverable .win98-table-row:hover {
+  background: #dfdfdf;
+}
+
+.win98-table-row-selected {
+  background: navy !important;
+  color: #fff;
+}
+
+.win98-table-empty {
+  text-align: center;
+  color: grey;
+  font-style: italic;
+  padding: 16px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .playground-container {
