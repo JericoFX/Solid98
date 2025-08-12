@@ -22,6 +22,7 @@ import {
   showInfo,
   showConfirm,
   FileExplorer,
+  NavigableFileExplorer,
   ImageViewer,
   Notepad
 } from '../index';
@@ -47,6 +48,15 @@ export default function App() {
   
   // Interaction logs
   const [interactionLog, setInteractionLog] = createSignal<string[]>([]);
+  
+  // Navigable File Explorer states
+  const [explorerWindows, setExplorerWindows] = createSignal<Array<{
+    id: string;
+    title: string;
+    initialPath: string;
+    active: boolean;
+  }>>([]);
+  const [nextExplorerId, setNextExplorerId] = createSignal(1);
 
   const treeData: TreeNode[] = [
     {
@@ -130,6 +140,45 @@ export default function App() {
   const handleCancelAlert = () => {
     addLog('User cancelled the action');
     setConfirmAlert(false);
+  };
+
+  // Explorer window management
+  const openExplorerWindow = (title: string, initialPath: string = '') => {
+    const id = `explorer-${nextExplorerId()}`;
+    setNextExplorerId(prev => prev + 1);
+    
+    const newWindow = {
+      id,
+      title,
+      initialPath,
+      active: true
+    };
+    
+    setExplorerWindows(prev => [...prev, newWindow]);
+    addLog(`Opened new explorer window: ${title}`);
+  };
+  
+  const closeExplorerWindow = (windowId: string) => {
+    setExplorerWindows(prev => prev.filter(w => w.id !== windowId));
+    addLog(`Closed explorer window: ${windowId}`);
+  };
+  
+  const handleFileOpen = (item: any) => {
+    addLog(`File opened: ${item.name}`);
+    
+    // Open different types of files appropriately
+    if (item.name.toLowerCase().includes('.jpg') || 
+        item.name.toLowerCase().includes('.png') || 
+        item.name.toLowerCase().includes('.gif')) {
+      alert(`Opening image: ${item.name}\n\nIn a real app, this would open the Image Viewer.`);
+    } else if (item.name.toLowerCase().includes('.txt') || 
+               item.name.toLowerCase().includes('.doc')) {
+      alert(`Opening document: ${item.name}\n\nIn a real app, this would open Notepad or Word.`);
+    } else if (item.name.toLowerCase().includes('.exe')) {
+      alert(`Executing program: ${item.name}\n\nIn a real Windows 98 system, this would run the application.`);
+    } else {
+      alert(`Opening file: ${item.name}\n\nType: ${item.type}\nPath: ${item.path || 'Unknown'}`);
+    }
   };
 
   return (
@@ -497,14 +546,137 @@ export default function App() {
         </Window>
       </div>
 
+      {/* Navigable File Explorer Demo */}
+      <div class="demo-section">
+        <h3 class="demo-title">Navigable File Explorer (SolidXp Style)</h3>
+        
+        <div style={{ 'margin-bottom': '16px' }}>
+          <p style={{ 'font-size': '12px', 'margin-bottom': '8px' }}>
+            Open multiple independent file explorer windows with full navigation support:
+          </p>
+          
+          <div style={{ display: 'flex', 'flex-wrap': 'wrap', gap: '8px', 'margin-bottom': '12px' }}>
+            <Button onClick={() => openExplorerWindow('My Computer', '')}>
+              🖥️ My Computer
+            </Button>
+            <Button onClick={() => openExplorerWindow('C: Drive', 'C:')}>
+              💾 C: Drive
+            </Button>
+            <Button onClick={() => openExplorerWindow('My Documents', 'C:/My Documents')}>
+              📁 My Documents
+            </Button>
+            <Button onClick={() => openExplorerWindow('Pictures', 'C:/My Pictures')}>
+              🖼️ My Pictures
+            </Button>
+            <Button onClick={() => openExplorerWindow('Program Files', 'C:/Program Files')}>
+              ⚙️ Program Files
+            </Button>
+          </div>
+          
+          <div style={{ 
+            padding: '8px', 
+            'background-color': '#fffbf0', 
+            border: '1px solid #dfb', 
+            'font-size': '10px',
+            'line-height': '1.4'
+          }}>
+            <strong>Navigation Features:</strong>
+            • Back/Forward buttons with history • Up button and breadcrumb navigation
+            • Clickable address bar for direct path entry • Real folder structures with nested navigation
+            • Multiple windows maintain independent state • File opening simulation with type detection
+          </div>
+        </div>
+
+        {/* Render all open explorer windows */}
+        <div style={{ 
+          position: 'relative', 
+          height: '500px', 
+          'background-color': '#008080',
+          'background-image': 'linear-gradient(45deg, #008080 25%, transparent 25%), linear-gradient(-45deg, #008080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #008080 75%), linear-gradient(-45deg, transparent 75%, #008080 75%)',
+          'background-size': '20px 20px',
+          'background-position': '0 0, 0 10px, 10px -10px, -10px 0px',
+          border: '2px inset #c0c0c0',
+          overflow: 'hidden'
+        }}>
+          {explorerWindows().map((window, index) => (
+            <div
+              style={{
+                position: 'absolute',
+                top: `${20 + index * 30}px`,
+                left: `${20 + index * 30}px`,
+                'z-index': window.active ? 100 : 10 + index
+              }}
+            >
+              <NavigableFileExplorer
+                title={window.title}
+                initialPath={window.initialPath}
+                width={550}
+                height={400}
+                active={window.active}
+                onClose={() => closeExplorerWindow(window.id)}
+                onFileOpen={handleFileOpen}
+                onPathChange={(path) => addLog(`Navigator ${window.id}: Changed to ${path || 'My Computer'}`)}
+              />
+            </div>
+          ))}
+          
+          {explorerWindows().length === 0 && (
+            <div style={{ 
+              position: 'absolute', 
+              top: '50%', 
+              left: '50%', 
+              transform: 'translate(-50%, -50%)',
+              'text-align': 'center',
+              color: 'white',
+              'font-size': '14px',
+              'text-shadow': '1px 1px 2px rgba(0,0,0,0.5)'
+            }}>
+              <div>Windows 98 Desktop</div>
+              <div style={{ 'font-size': '12px', 'margin-top': '8px' }}>
+                Click the buttons above to open File Explorer windows
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Applications Demo */}
       <div class="demo-section">
         <h3 class="demo-title">Windows 98 Applications</h3>
         
         <div style={{ display: 'grid', 'grid-template-columns': '1fr 1fr', gap: '20px', 'margin-bottom': '20px' }}>
           <div style={{ height: '400px' }}>
-            <h4>File Explorer</h4>
-            <FileExplorer title="My Computer" />
+            <h4>File Explorer (Windows 98) with Navigation</h4>
+            <Window title="My Computer - File Explorer" active>
+              <FileExplorer
+                enableNavigation={true}
+                viewMode="details"
+                height="320px"
+                currentPath=""
+                onNavigate={(path, item) => {
+                  addLog(`File Explorer: Navigated to ${path || 'My Computer'}`);
+                }}
+                onFileSelect={(item, selectedItems) => {
+                  addLog(`File Explorer: Selected ${item.name}`);
+                }}
+                onFileOpen={(item) => {
+                  addLog(`File Explorer: Opened ${item.name}`);
+                  if (item.name.toLowerCase().includes('.jpg') || 
+                      item.name.toLowerCase().includes('.png') || 
+                      item.name.toLowerCase().includes('.gif')) {
+                    alert(`Opening image: ${item.name}\n\nIn a real app, this would open the Image Viewer.`);
+                  } else {
+                    alert(`Opening file: ${item.name}`);
+                  }
+                }}
+                onSearchChange={(searchTerm, filteredItems) => {
+                  addLog(`File Explorer: Search "${searchTerm}" found ${filteredItems.length} items`);
+                }}
+                onPathChange={(path) => {
+                  addLog(`File Explorer: Path changed to ${path || 'My Computer'}`);
+                }}
+              />
+            </Window>
           </div>
           
           <div style={{ height: '400px' }}>
@@ -531,9 +703,9 @@ export default function App() {
           </div>
           
           <div style={{ height: '400px' }}>
-            <h4>File Properties</h4>
-            <div style="background: #c0c0c0; border: 2px inset; padding: 16px; height: 100%;">
-              <p>Click on folders in File Explorer to navigate:</p>
+            <h4>File Explorer Features</h4>
+            <div style="background: #c0c0c0; border: 2px inset; padding: 16px; height: 100%; font-size: 11px;">
+              <p><strong>Navigation:</strong></p>
               <ul>
                 <li>My Documents → Letters, Projects, files</li>
                 <li>My Pictures → Vacation, Family folders</li>
@@ -541,8 +713,22 @@ export default function App() {
                 <li>Program Files → Software folders</li>
                 <li>Windows → System folders</li>
               </ul>
-              <br />
-              <p>Click images to view full size modal!</p>
+              
+              <p><strong>Search Features:</strong></p>
+              <ul>
+                <li>Use Search bar to filter current folder items</li>
+                <li>Works for both files and folders</li>
+                <li>Case-insensitive partial matching</li>
+                <li>Search clears when navigating folders</li>
+                <li>Status bar shows search results count</li>
+              </ul>
+              
+              <p><strong>Interactions:</strong></p>
+              <ul>
+                <li>Click to select, Ctrl+click for multi-select</li>
+                <li>Double-click folders to navigate</li>
+                <li>Click images to view full size modal!</li>
+              </ul>
             </div>
           </div>
         </div>

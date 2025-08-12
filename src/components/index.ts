@@ -15,5 +15,6 @@ export { Modal } from './Modal';
 export { Table, tableStyles } from './Table';
 export { Alert, showError, showWarning, showInfo, showConfirm } from './Alert';
 export { FileExplorer } from './FileExplorer';
+export { NavigableFileExplorer } from './NavigableFileExplorer';
 export { ImageViewer } from './ImageViewer';
 export { Notepad } from './Notepad';

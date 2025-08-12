@@ -34,7 +34,9 @@ export interface WindowHeaderProps extends BaseComponentProps {
   onHelp?: () => void;
 }
 
-export interface ButtonProps extends BaseComponentProps, Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'class'> {
+export interface ButtonProps
+  extends BaseComponentProps,
+    Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'class'> {
   variant?: 'default' | 'normal';
   disabled?: boolean;
 }
@@ -47,13 +49,15 @@ export interface FieldRowProps extends BaseComponentProps {
   stacked?: boolean;
 }
 
-export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'class' | 'type'> {
+export interface CheckboxProps
+  extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'class' | 'type'> {
   class?: string;
   label?: string;
   id?: string;
 }
 
-export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'class' | 'type'> {
+export interface RadioProps
+  extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'class' | 'type'> {
   class?: string;
   label?: string;
   id?: string;
@@ -61,13 +65,15 @@ export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElemen
   value?: string;
 }
 
-export interface SelectProps extends Omit<JSX.SelectHTMLAttributes<HTMLSelectElement>, 'class'> {
+export interface SelectProps
+  extends Omit<JSX.SelectHTMLAttributes<HTMLSelectElement>, 'class'> {
   class?: string;
   children?: JSX.Element;
   options?: { value: string; label: string; selected?: boolean }[];
 }
 
-export interface SliderProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'class' | 'type'> {
+export interface SliderProps
+  extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'class' | 'type'> {
   class?: string;
   vertical?: boolean;
   boxIndicator?: boolean;
@@ -83,7 +89,9 @@ export interface ProgressBarProps extends BaseComponentProps {
   segmented?: boolean;
 }
 
-export interface SunkenPanelProps extends BaseComponentProps, Omit<JSX.HTMLAttributes<HTMLDivElement>, 'class'> {
+export interface SunkenPanelProps
+  extends BaseComponentProps,
+    Omit<JSX.HTMLAttributes<HTMLDivElement>, 'class'> {
   interactive?: boolean;
 }
 
@@ -156,4 +164,72 @@ export interface AlertProps extends BaseComponentProps {
   confirmText?: string;
   cancelText?: string;
   showCancel?: boolean;
+}
+
+/**
+ * File Explorer types
+ */
+export interface FileItem {
+  name: string;
+  type: 'file' | 'folder';
+  size?: number;
+  modified?: Date;
+  icon?: string;
+  path?: string;
+}
+
+export interface FileSystemStructure {
+  [key: string]: FileItem[] | FileSystemStructure;
+}
+
+export interface FileExplorerProps extends BaseComponentProps {
+  data?: FileItem[];
+  fileSystem?: FileSystemStructure; // New: file system structure for navigation
+  currentPath?: string;
+  viewMode?: 'icons' | 'details';
+  showHidden?: boolean;
+  showSearch?: boolean;
+  searchPlaceholder?: string;
+  width?: string;
+  height?: string;
+  enableNavigation?: boolean; // New: enable/disable navigation features
+  showBackForward?: boolean; // New: show back/forward buttons
+  onNavigate?: (path: string, item: FileItem) => void;
+  onFileSelect?: (item: FileItem, selectedItems: string[]) => void;
+  onFileOpen?: (item: FileItem) => void;
+  onSearchChange?: (searchTerm: string, filteredItems: FileItem[]) => void;
+  onPathChange?: (path: string) => void; // New: when path changes via navigation
+}
+
+/**
+ * Navigable File Explorer types
+ */
+export interface NavigationHistoryEntry {
+  path: string;
+  displayName: string;
+  timestamp: Date;
+}
+
+export interface NavigableFileExplorerProps extends BaseComponentProps {
+  title?: string;
+  initialPath?: string;
+  viewMode?: 'icons' | 'details';
+  showHidden?: boolean;
+  showSearch?: boolean;
+  showToolbar?: boolean;
+  showAddressBar?: boolean;
+  showStatusBar?: boolean;
+  width?: string | number;
+  height?: string | number;
+  active?: boolean;
+  resizable?: boolean;
+  showMinimize?: boolean;
+  showMaximize?: boolean;
+  showClose?: boolean;
+  onClose?: () => void;
+  onMinimize?: () => void;
+  onMaximize?: () => void;
+  onRestore?: () => void;
+  onFileOpen?: (item: FileItem) => void;
+  onPathChange?: (path: string) => void;
 }

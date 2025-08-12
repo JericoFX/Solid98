@@ -1,239 +1,499 @@
-import { JSX, createSignal, mergeProps, splitProps, For, Show } from 'solid-js';
+import { JSX, createSignal, mergeProps, splitProps, For, Show, createMemo, createEffect, onMount } from 'solid-js';
 import { cn } from '../utils/cn';
-import { Window } from './Window';
 import { StatusBar } from './StatusBar';
 import { Button } from './Button';
-
-interface FileItem {
-  id: string;
-  name: string;
-  type: 'folder' | 'file';
-  size?: number;
-  modified?: string;
-  icon?: string;
-}
-
-interface FileExplorerProps {
-  title?: string;
-  initialPath?: string;
-  class?: string;
-  children?: JSX.Element;
-}
-
-// Simulated file system structure
-const fileSystem: Record<string, FileItem[]> = {
-  'C:\\': [
-    { id: '1', name: 'My Documents', type: 'folder', modified: '12/15/2024' },
-    { id: '2', name: 'My Pictures', type: 'folder', modified: '12/14/2024' },
-    { id: '3', name: 'Desktop', type: 'folder', modified: '12/16/2024' },
-    { id: '4', name: 'Program Files', type: 'folder', modified: '12/10/2024' },
-    { id: '5', name: 'Windows', type: 'folder', modified: '12/08/2024' },
-    { id: '6', name: 'readme.txt', type: 'file', size: 2048, modified: '12/15/2024' },
-    { id: '7', name: 'config.ini', type: 'file', size: 1024, modified: '12/14/2024' },
-    { id: '8', name: 'autoexec.bat', type: 'file', size: 512, modified: '12/13/2024' },
-  ],
-  'C:\\My Documents\\': [
-    { id: '9', name: 'Letters', type: 'folder', modified: '12/10/2024' },
-    { id: '10', name: 'Projects', type: 'folder', modified: '12/12/2024' },
-    { id: '11', name: 'document1.doc', type: 'file', size: 15360, modified: '12/14/2024' },
-    { id: '12', name: 'notes.txt', type: 'file', size: 2048, modified: '12/15/2024' },
-  ],
-  'C:\\My Pictures\\': [
-    { id: '13', name: 'Vacation', type: 'folder', modified: '12/05/2024' },
-    { id: '14', name: 'Family', type: 'folder', modified: '12/07/2024' },
-    { id: '15', name: 'sunset.jpg', type: 'file', size: 245760, modified: '12/10/2024' },
-    { id: '16', name: 'landscape.bmp', type: 'file', size: 1048576, modified: '12/08/2024' },
-  ],
-  'C:\\Desktop\\': [
-    { id: '17', name: 'Shortcut to Calculator', type: 'file', size: 1024, modified: '12/16/2024' },
-    { id: '18', name: 'New Folder', type: 'folder', modified: '12/16/2024' },
-    { id: '19', name: 'temp.txt', type: 'file', size: 512, modified: '12/16/2024' },
-  ],
-  'C:\\Program Files\\': [
-    { id: '20', name: 'Microsoft Office', type: 'folder', modified: '12/01/2024' },
-    { id: '21', name: 'Internet Explorer', type: 'folder', modified: '12/01/2024' },
-    { id: '22', name: 'Windows Media Player', type: 'folder', modified: '12/01/2024' },
-  ],
-  'C:\\Windows\\': [
-    { id: '23', name: 'System32', type: 'folder', modified: '12/01/2024' },
-    { id: '24', name: 'Temp', type: 'folder', modified: '12/15/2024' },
-    { id: '25', name: 'win.ini', type: 'file', size: 1024, modified: '12/08/2024' },
-    { id: '26', name: 'system.ini', type: 'file', size: 2048, modified: '12/08/2024' },
-  ],
-};
+import { FileExplorerProps, FileItem } from '../types';
+import { FileSystemNavigator, defaultFileSystem } from '../utils/fileSystem';
+import './FileExplorer.css';
 
 export function FileExplorer(props: FileExplorerProps) {
-  const merged = mergeProps({
-    title: 'My Computer',
-    initialPath: 'C:\\'
-  }, props);
-  
-  const [local, others] = splitProps(merged, ['title', 'initialPath', 'class']);
-  
-  const [currentPath, setCurrentPath] = createSignal(local.initialPath);
+  const merged = mergeProps(
+    {
+      width: '100%',
+      height: '400px',
+      viewMode: 'icons' as const,
+      showHidden: false,
+      showSearch: true,
+      searchPlaceholder: 'Search files and folders...',
+      currentPath: '',
+      data: [],
+      enableNavigation: true,
+      showBackForward: true,
+      fileSystem: defaultFileSystem
+    },
+    props
+  );
+
+  const [local, others] = splitProps(merged, [
+    'data',
+    'currentPath', 
+    'width',
+    'height',
+    'viewMode',
+    'showHidden',
+    'showSearch',
+    'searchPlaceholder',
+    'enableNavigation',
+    'showBackForward',
+    'fileSystem',
+    'onNavigate',
+    'onFileSelect',
+    'onFileOpen',
+    'onSearchChange',
+    'onPathChange',
+    'class',
+  ]);
+
   const [selectedItems, setSelectedItems] = createSignal<string[]>([]);
-  const [viewMode, setViewMode] = createSignal<'list' | 'details'>('details');
+  const [searchTerm, setSearchTerm] = createSignal<string>('');
+  const [currentPath, setCurrentPath] = createSignal<string>(local.currentPath || '');
+  const [currentData, setCurrentData] = createSignal<FileItem[]>(local.data || []);
   
-  const currentFiles = () => fileSystem[currentPath()] || [];
+  // Navigation system
+  let navigator: FileSystemNavigator | null = null;
   
-  const formatFileSize = (bytes?: number) => {
+  // Initialize navigator if navigation is enabled
+  onMount(() => {
+    if (local.enableNavigation && local.fileSystem) {
+      navigator = new FileSystemNavigator(local.fileSystem);
+      
+      // Load initial data from file system
+      if (!local.data || local.data.length === 0) {
+        const items = navigator.navigateTo(local.currentPath || '');
+        setCurrentData(items);
+      }
+    }
+  });
+  
+  // Update data when currentPath changes
+  createEffect(() => {
+    if (local.enableNavigation && navigator) {
+      const items = navigator.getItemsAtPath(currentPath());
+      setCurrentData(items);
+    } else if (local.data) {
+      setCurrentData(local.data);
+    }
+  });
+
+  // Windows 98 file icons mapping
+  const getFileIcon = (item: FileItem): string => {
+    if (item.type === 'folder') {
+      return '📁'; // Classic folder icon
+    }
+    
+    const ext = item.name.toLowerCase().split('.').pop() || '';
+    switch (ext) {
+      case 'txt':
+      case 'md':
+        return '📄';
+      case 'doc':
+      case 'docx':
+        return '📝';
+      case 'xls':
+      case 'xlsx':
+        return '📊';
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'bmp':
+        return '🖼️';
+      case 'mp3':
+      case 'wav':
+      case 'wma':
+        return '🎵';
+      case 'exe':
+      case 'com':
+        return '⚙️';
+      case 'zip':
+      case 'rar':
+        return '📦';
+      default:
+        return '📄';
+    }
+  };
+
+  // Format file size in Windows 98 style
+  const formatFileSize = (bytes?: number): string => {
     if (!bytes) return '';
     if (bytes < 1024) return `${bytes} bytes`;
     if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
     return `${Math.round(bytes / (1024 * 1024))} MB`;
   };
-  
-  const handleItemClick = (id: string, event: MouseEvent) => {
+
+  // Format date in Windows 98 style
+  const formatDate = (date?: Date): string => {
+    if (!date) return '';
+    return date.toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit', 
+      year: 'numeric'
+    });
+  };
+
+  // Filter files based on search term
+  const filteredData = createMemo(() => {
+    const dataToFilter = currentData();
+    if (!searchTerm()) return dataToFilter;
+    
+    const filtered = dataToFilter.filter(item =>
+      item.name.toLowerCase().includes(searchTerm().toLowerCase())
+    );
+    
+    // Call search change callback
+    local.onSearchChange?.(searchTerm(), filtered);
+    return filtered;
+  });
+
+  const handleItemClick = (item: FileItem, event: MouseEvent) => {
+    const itemKey = `${item.name}_${item.type}`;
+    
     if (event.ctrlKey) {
+      // Multi-select with Ctrl+click
       setSelectedItems(prev => 
-        prev.includes(id) 
-          ? prev.filter(item => item !== id)
-          : [...prev, id]
+        prev.includes(itemKey) 
+          ? prev.filter(id => id !== itemKey)
+          : [...prev, itemKey]
       );
     } else {
-      setSelectedItems([id]);
+      // Single select
+      setSelectedItems([itemKey]);
+    }
+    
+    local.onFileSelect?.(item, selectedItems());
+  };
+
+  const handleItemDoubleClick = (item: FileItem) => {
+    if (item.type === 'folder') {
+      if (local.enableNavigation && navigator) {
+        // Use navigation system
+        const newPath = navigator.buildPath(currentPath(), item.name);
+        const items = navigator.navigateTo(newPath);
+        setCurrentPath(newPath);
+        setCurrentData(items);
+        setSelectedItems([]);
+        setSearchTerm('');
+        
+        // Notify callbacks
+        local.onNavigate?.(newPath, item);
+        local.onPathChange?.(newPath);
+      } else {
+        // Legacy behavior
+        const newPath = currentPath()
+          ? `${currentPath()}/${item.name}`
+          : item.name;
+        local.onNavigate?.(newPath, item);
+      }
+    } else {
+      // Open file
+      local.onFileOpen?.(item);
+    }
+  };
+
+  const navigateUp = () => {
+    const current = currentPath();
+    if (!current) return;
+    
+    if (local.enableNavigation && navigator) {
+      const parentPath = navigator.getParentPath(current);
+      const items = navigator.navigateTo(parentPath);
+      setCurrentPath(parentPath);
+      setCurrentData(items);
+      setSelectedItems([]);
+      setSearchTerm('');
+      
+      // Create a mock parent folder item for callback
+      const parentItem: FileItem = {
+        name: '..', 
+        type: 'folder',
+        path: parentPath
+      };
+      
+      local.onNavigate?.(parentPath, parentItem);
+      local.onPathChange?.(parentPath);
+    } else {
+      // Legacy behavior
+      const pathParts = current.split('/').filter(Boolean);
+      pathParts.pop();
+      const parentPath = pathParts.join('/');
+      
+      const parentItem: FileItem = {
+        name: '..', 
+        type: 'folder',
+        path: parentPath
+      };
+      
+      local.onNavigate?.(parentPath, parentItem);
+      setSelectedItems([]);
+      setSearchTerm('');
     }
   };
   
-  const handleItemDoubleClick = (item: FileItem) => {
-    if (item.type === 'folder') {
-      const newPath = `${currentPath()}${item.name}\\`;
-      if (fileSystem[newPath]) {
-        setCurrentPath(newPath);
+  // Navigation functions
+  const navigateBack = () => {
+    if (local.enableNavigation && navigator) {
+      const result = navigator.goBack();
+      if (result) {
+        setCurrentPath(result.path);
+        setCurrentData(result.items);
         setSelectedItems([]);
+        setSearchTerm('');
+        
+        local.onPathChange?.(result.path);
       }
     }
   };
   
-  const navigateUp = () => {
-    const pathParts = currentPath().split('\\').filter(Boolean);
-    if (pathParts.length > 1) {
-      pathParts.pop();
-      setCurrentPath(pathParts.join('\\') + '\\');
+  const navigateForward = () => {
+    if (local.enableNavigation && navigator) {
+      const result = navigator.goForward();
+      if (result) {
+        setCurrentPath(result.path);
+        setCurrentData(result.items);
+        setSelectedItems([]);
+        setSearchTerm('');
+        
+        local.onPathChange?.(result.path);
+      }
+    }
+  };
+  
+  const canGoBack = () => {
+    return local.enableNavigation && navigator ? navigator.canGoBack() : false;
+  };
+  
+  const canGoForward = () => {
+    return local.enableNavigation && navigator ? navigator.canGoForward() : false;
+  };
+
+  // Breadcrumb navigation functions
+  const getBreadcrumbs = createMemo(() => {
+    if (!local.enableNavigation || !navigator) return [];
+    return navigator.getBreadcrumbs(currentPath());
+  });
+
+  const handleBreadcrumbClick = (path: string) => {
+    if (local.enableNavigation && navigator) {
+      const items = navigator.navigateTo(path);
+      setCurrentPath(path);
+      setCurrentData(items);
+      setSelectedItems([]);
+      setSearchTerm('');
+      
+      local.onNavigate?.(path, { name: '..', type: 'folder', path } as FileItem);
+      local.onPathChange?.(path);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setSelectedItems([]);
+  };
+
+  const handleSearchInput = (value: string) => {
+    setSearchTerm(value);
+    // Clear selection when searching
+    if (value) {
       setSelectedItems([]);
     }
   };
 
   return (
-    <Window 
-      title={local.title} 
-      class={cn('file-explorer', local.class)} 
+    <div 
+      class={cn('win98-file-explorer', local.class)}
+      style={{ 
+        width: local.width, 
+        height: local.height,
+        border: '2px inset #c0c0c0',
+        'background-color': '#c0c0c0'
+      }}
       {...others}
     >
-      {/* Toolbar */}
-      <div style="display: flex; gap: 4px; padding: 4px; border-bottom: 1px solid #c0c0c0; background: #c0c0c0;">
-        <Button onClick={navigateUp} disabled={currentPath() === 'C:\\'}>
-          Up
+      {/* Windows 98 Toolbar */}
+      <div class="win98-toolbar">
+        <Show when={local.showBackForward && local.enableNavigation}>
+          <Button 
+            onClick={navigateBack}
+            disabled={!canGoBack()}
+            class="toolbar-button"
+          >
+            ⬅ Back
+          </Button>
+          <Button 
+            onClick={navigateForward}
+            disabled={!canGoForward()}
+            class="toolbar-button"
+          >
+            ➡ Forward
+          </Button>
+          
+          <div class="toolbar-separator"></div>
+        </Show>
+        
+        <Button 
+          onClick={navigateUp} 
+          disabled={!currentPath()}
+          class="toolbar-button"
+        >
+          ⬆ Up
         </Button>
-        <Button onClick={() => setViewMode(prev => prev === 'list' ? 'details' : 'list')}>
-          {viewMode() === 'list' ? 'Details' : 'List'}
+        
+        <div class="toolbar-separator"></div>
+        
+        <Button class="toolbar-button">
+          📋 Cut
         </Button>
+        <Button class="toolbar-button">
+          📄 Copy  
+        </Button>
+        <Button class="toolbar-button">
+          📋 Paste
+        </Button>
+        
+        <div class="toolbar-separator"></div>
+        
+        <Show when={searchTerm()}>
+          <Button onClick={clearSearch} class="toolbar-button">
+            ❌ Clear Search
+          </Button>
+        </Show>
       </div>
-      
-      {/* Address Bar */}
-      <div class="field-row" style="margin: 4px;">
-        <label for="address">Address:</label>
-        <input 
-          id="address" 
-          type="text" 
-          value={currentPath()} 
-          onInput={(e) => setCurrentPath(e.currentTarget.value)}
-        />
+
+      {/* Enhanced Address Bar with Breadcrumbs */}
+      <div class="win98-address-bar">
+        <label for="address-input">Address:</label>
+        <div class="address-field">
+          <Show when={local.enableNavigation && navigator}>
+            <div class="breadcrumb-container">
+              <For each={getBreadcrumbs()}>
+                {(crumb, index) => (
+                  <>
+                    <span
+                      class="breadcrumb-item"
+                      onClick={() => handleBreadcrumbClick(crumb.path)}
+                    >
+                      {crumb.name}
+                    </span>
+                    <Show when={index() < getBreadcrumbs().length - 1}>
+                      <span class="breadcrumb-separator"> / </span>
+                    </Show>
+                  </>
+                )}
+              </For>
+            </div>
+          </Show>
+          <Show when={!local.enableNavigation || !navigator}>
+            <input
+              id="address-input"
+              type="text"
+              value={currentPath() || 'My Computer'}
+              readonly
+              class="address-input"
+            />
+          </Show>
+        </div>
       </div>
-      
+
+      {/* Search Bar */}
+      <Show when={local.showSearch}>
+        <div class="win98-search-bar">
+          <label for="search-input">Search:</label>
+          <input
+            id="search-input"
+            type="text"
+            placeholder={local.searchPlaceholder}
+            value={searchTerm()}
+            onInput={(e) => handleSearchInput(e.currentTarget.value)}
+            class="search-input"
+          />
+        </div>
+      </Show>
+
       {/* File Area */}
-      <div class="sunken-field" style="flex: 1; margin: 4px; padding: 4px; overflow: auto; background: white;">
-        <Show when={viewMode() === 'details'}>
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+      <div class="win98-file-area">
+        <Show when={local.viewMode === 'details'}>
+          {/* Details View */}
+          <table class="details-table">
             <thead>
-              <tr style="background: #c0c0c0; border-bottom: 1px solid #808080;">
-                <th style="text-align: left; padding: 2px 8px; border-right: 1px solid #808080;">Name</th>
-                <th style="text-align: left; padding: 2px 8px; border-right: 1px solid #808080;">Size</th>
-                <th style="text-align: left; padding: 2px 8px; border-right: 1px solid #808080;">Type</th>
-                <th style="text-align: left; padding: 2px 8px;">Modified</th>
+              <tr class="details-header">
+                <th class="col-name">Name</th>
+                <th class="col-size">Size</th>
+                <th class="col-type">Type</th>
+                <th class="col-modified">Modified</th>
               </tr>
             </thead>
             <tbody>
-              <For each={currentFiles()}>
-                {(item) => (
-                  <tr 
-                    class={cn(
-                      'file-item',
-                      selectedItems().includes(item.id) && 'selected'
-                    )}
-                    style={selectedItems().includes(item.id) ? 
-                      "background: #0000ff; color: white;" : 
-                      "background: transparent;"
-                    }
-                    onClick={(e) => handleItemClick(item.id, e)}
-                    onDblClick={() => handleItemDoubleClick(item)}
-                  >
-                    <td style="padding: 1px 8px; display: flex; align-items: center; gap: 4px;">
-                      <span style={`font-family: 'MS Sans Serif', sans-serif; font-size: 16px; ${
-                        item.type === 'folder' ? 'color: #ffff00;' : 'color: #c0c0c0;'
-                      }`}>
-                        {item.type === 'folder' ? '📁' : '📄'}
-                      </span>
-                      {item.name}
-                    </td>
-                    <td style="padding: 1px 8px;">
-                      {item.type === 'file' ? formatFileSize(item.size) : ''}
-                    </td>
-                    <td style="padding: 1px 8px;">
-                      {item.type === 'folder' ? 'File Folder' : 'File'}
-                    </td>
-                    <td style="padding: 1px 8px;">{item.modified}</td>
-                  </tr>
-                )}
+              <For each={filteredData()}>
+                {(item) => {
+                  const itemKey = `${item.name}_${item.type}`;
+                  const isSelected = selectedItems().includes(itemKey);
+                  
+                  return (
+                    <tr
+                      class={cn('file-row', isSelected && 'selected')}
+                      onClick={(e) => handleItemClick(item, e)}
+                      onDblClick={() => handleItemDoubleClick(item)}
+                    >
+                      <td class="file-name">
+                        <span class="file-icon">{getFileIcon(item)}</span>
+                        <span class="file-text">{item.name}</span>
+                      </td>
+                      <td class="file-size">
+                        {item.type === 'file' ? formatFileSize(item.size) : ''}
+                      </td>
+                      <td class="file-type">
+                        {item.type === 'folder' ? 'File Folder' : 'File'}
+                      </td>
+                      <td class="file-modified">
+                        {formatDate(item.modified)}
+                      </td>
+                    </tr>
+                  );
+                }}
               </For>
             </tbody>
           </table>
         </Show>
-        
-        <Show when={viewMode() === 'list'}>
-          <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 8px;">
-            <For each={currentFiles()}>
-              {(item) => (
-                <div 
-                  class={cn(
-                    'file-item-icon',
-                    selectedItems().includes(item.id) && 'selected'
-                  )}
-                  style={`
-                    display: flex; 
-                    flex-direction: column; 
-                    align-items: center; 
-                    width: 60px; 
-                    padding: 4px; 
-                    cursor: pointer;
-                    ${selectedItems().includes(item.id) ? 
-                      'background: #0000ff; color: white;' : 
-                      'background: transparent;'
-                    }
-                  `}
-                  onClick={(e) => handleItemClick(item.id, e)}
-                  onDblClick={() => handleItemDoubleClick(item)}
-                >
-                  <span style={`font-size: 32px; ${
-                    item.type === 'folder' ? 'color: #ffff00;' : 'color: #c0c0c0;'
-                  }`}>
-                    {item.type === 'folder' ? '📁' : '📄'}
-                  </span>
-                  <span style="font-size: 11px; text-align: center; word-wrap: break-word; width: 100%;">
-                    {item.name}
-                  </span>
-                </div>
-              )}
+
+        <Show when={local.viewMode === 'icons'}>
+          {/* Icons View */}
+          <div class="icons-container">
+            <For each={filteredData()}>
+              {(item) => {
+                const itemKey = `${item.name}_${item.type}`;
+                const isSelected = selectedItems().includes(itemKey);
+                
+                return (
+                  <div
+                    class={cn('file-icon-item', isSelected && 'selected')}
+                    onClick={(e) => handleItemClick(item, e)}
+                    onDblClick={() => handleItemDoubleClick(item)}
+                  >
+                    <div class="icon-image">
+                      {getFileIcon(item)}
+                    </div>
+                    <div class="icon-label">
+                      {item.name}
+                    </div>
+                  </div>
+                );
+              }}
             </For>
           </div>
         </Show>
       </div>
-      
-      <StatusBar fields={[
-        `${currentFiles().length} object(s)`,
-        `${selectedItems().length} selected`,
-        currentPath()
-      ]} />
-    </Window>
+
+      {/* Windows 98 Status Bar */}
+      <StatusBar 
+        fields={[
+          searchTerm() 
+            ? `${filteredData().length} of ${(local.data || []).length} object(s)`
+            : `${(local.data || []).length} object(s)`,
+          `${selectedItems().length} selected`,
+          searchTerm() ? `Search: "${searchTerm()}"` : (local.currentPath || 'My Computer')
+        ]}
+        class="win98-status-bar"
+      />
+    </div>
   );
 }

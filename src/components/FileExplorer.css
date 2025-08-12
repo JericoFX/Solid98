@@ -1,0 +1,445 @@
+/* Windows 98 File Explorer Styles */
+.win98-file-explorer {
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  background-color: #c0c0c0;
+  border: 2px inset #c0c0c0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Toolbar Styles */
+.win98-toolbar {
+  background-color: #c0c0c0;
+  border-bottom: 1px solid #808080;
+  padding: 3px 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+.toolbar-button {
+  font-size: 11px !important;
+  padding: 2px 6px !important;
+  height: 22px !important;
+  min-width: auto !important;
+  font-family: 'MS Sans Serif', sans-serif !important;
+  background: #c0c0c0 !important;
+  border: 1px outset #c0c0c0 !important;
+  color: black !important;
+}
+
+.toolbar-button:hover {
+  background: #d4d0c8 !important;
+}
+
+.toolbar-button:active {
+  border: 1px inset #c0c0c0 !important;
+}
+
+.toolbar-button:disabled {
+  color: #808080 !important;
+  background: #c0c0c0 !important;
+  border: 1px outset #c0c0c0 !important;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 18px;
+  background-color: #808080;
+  margin: 0 2px;
+  border-right: 1px solid #ffffff;
+}
+
+/* Address Bar Styles */
+.win98-address-bar {
+  background-color: #c0c0c0;
+  padding: 4px 6px;
+  border-bottom: 1px solid #808080;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.win98-address-bar label {
+  font-weight: normal;
+  color: black;
+  white-space: nowrap;
+}
+
+.address-field {
+  flex: 1;
+}
+
+.address-input {
+  width: 100%;
+  height: 18px;
+  border: 1px inset #c0c0c0;
+  background: white;
+  padding: 1px 4px;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  box-sizing: border-box;
+}
+
+/* Breadcrumb Navigation Styles */
+.breadcrumb-container {
+  width: 100%;
+  height: 18px;
+  border: 1px inset #c0c0c0;
+  background: white;
+  padding: 1px 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.breadcrumb-item {
+  color: #0000ff;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0 2px;
+  border-radius: 0; /* No rounded corners in Windows 98 */
+}
+
+.breadcrumb-item:hover {
+  text-decoration: underline;
+  background: #e6e6e6;
+}
+
+.breadcrumb-item:active {
+  background: #d4d0c8;
+}
+
+.breadcrumb-separator {
+  color: #808080;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  white-space: nowrap;
+  margin: 0 1px;
+}
+
+/* Search Bar Styles */
+.win98-search-bar {
+  background-color: #c0c0c0;
+  padding: 4px 6px;
+  border-bottom: 1px solid #808080;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.win98-search-bar label {
+  font-weight: normal;
+  color: black;
+  white-space: nowrap;
+}
+
+.search-input {
+  flex: 1;
+  height: 18px;
+  border: 1px inset #c0c0c0;
+  background: white;
+  padding: 1px 4px;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: #808080;
+  font-style: normal;
+}
+
+/* File Area Styles */
+.win98-file-area {
+  flex: 1;
+  background: white;
+  border: 2px inset #c0c0c0;
+  margin: 2px;
+  overflow: auto;
+  position: relative;
+}
+
+/* Details View Styles */
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  background: white;
+}
+
+.details-header {
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+}
+
+.details-header th {
+  text-align: left;
+  padding: 2px 6px;
+  border-right: 1px solid #808080;
+  font-weight: normal;
+  background: #c0c0c0;
+  color: black;
+  height: 16px;
+  box-sizing: border-box;
+}
+
+.details-header th:last-child {
+  border-right: none;
+}
+
+.file-row {
+  background: white;
+  cursor: pointer;
+  height: 16px;
+}
+
+.file-row:hover {
+  background: #e6e6e6;
+}
+
+.file-row.selected {
+  background: #0000ff;
+  color: white;
+}
+
+.file-row td {
+  padding: 1px 6px;
+  border: none;
+  vertical-align: middle;
+  height: 16px;
+  box-sizing: border-box;
+}
+
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-icon {
+  font-size: 14px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.file-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-size,
+.file-type,
+.file-modified {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-name {
+  width: 40%;
+  min-width: 120px;
+}
+
+.col-size {
+  width: 15%;
+  min-width: 60px;
+}
+
+.col-type {
+  width: 25%;
+  min-width: 80px;
+}
+
+.col-modified {
+  width: 20%;
+  min-width: 80px;
+}
+
+/* Icons View Styles */
+.icons-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  gap: 4px;
+  align-content: flex-start;
+}
+
+.file-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 64px;
+  padding: 4px 2px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: white;
+  text-align: center;
+}
+
+.file-icon-item:hover {
+  background: #e6e6e6;
+}
+
+.file-icon-item.selected {
+  background: #0000ff;
+  color: white;
+  border: 1px dotted white;
+}
+
+.icon-image {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.icon-label {
+  font-size: 11px;
+  line-height: 12px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-height: 24px;
+  overflow: hidden;
+  text-align: center;
+  width: 100%;
+}
+
+/* Status Bar Styles */
+.win98-status-bar {
+  background: #c0c0c0 !important;
+  border-top: 1px solid #808080 !important;
+  font-family: 'MS Sans Serif', sans-serif !important;
+  font-size: 11px !important;
+  height: 20px !important;
+  padding: 2px 6px !important;
+}
+
+.win98-status-bar .status-field {
+  background: #c0c0c0 !important;
+  border: 1px inset #c0c0c0 !important;
+  padding: 1px 4px !important;
+  height: 16px !important;
+  line-height: 14px !important;
+}
+
+/* Scrollbar Styles for Windows 98 */
+.win98-file-area::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+.win98-file-area::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border: 1px inset #c0c0c0;
+}
+
+.win98-file-area::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 1px outset #c0c0c0;
+}
+
+.win98-file-area::-webkit-scrollbar-thumb:hover {
+  background: #d4d0c8;
+}
+
+.win98-file-area::-webkit-scrollbar-corner {
+  background: #c0c0c0;
+}
+
+.win98-file-area::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border: 1px outset #c0c0c0;
+  width: 16px;
+  height: 16px;
+}
+
+.win98-file-area::-webkit-scrollbar-button:hover {
+  background: #d4d0c8;
+}
+
+.win98-file-area::-webkit-scrollbar-button:active {
+  border: 1px inset #c0c0c0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .col-size,
+  .col-type {
+    display: none;
+  }
+  
+  .col-name {
+    width: 60%;
+  }
+  
+  .col-modified {
+    width: 40%;
+  }
+  
+  .icons-container {
+    gap: 2px;
+  }
+  
+  .file-icon-item {
+    width: 56px;
+  }
+}
+
+/* Focus styles for accessibility */
+.address-input:focus,
+.search-input:focus {
+  outline: 1px dotted black;
+  outline-offset: -2px;
+}
+
+.file-row:focus-visible,
+.file-icon-item:focus-visible {
+  outline: 1px dotted black;
+  outline-offset: -1px;
+}
+
+/* Animation for selection */
+.file-row.selected,
+.file-icon-item.selected {
+  transition: none; /* Windows 98 had no transitions */
+}
+
+/* Print styles */
+@media print {
+  .win98-toolbar,
+  .win98-address-bar,
+  .win98-search-bar,
+  .win98-status-bar {
+    display: none;
+  }
+  
+  .win98-file-explorer {
+    border: 1px solid black;
+  }
+  
+  .win98-file-area {
+    border: none;
+    margin: 0;
+  }
+}
