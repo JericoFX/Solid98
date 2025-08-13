@@ -1,4 +1,4 @@
-import { JSX, mergeProps, splitProps } from 'solid-js';
+import { mergeProps, splitProps } from 'solid-js';
 import { cn } from '../utils/cn';
 import { TabsProps } from '../types';
 

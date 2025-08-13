@@ -1,21 +1,39 @@
-/* Windows 98 File Explorer CSS - Following exact guide specifications */
+/* Optimized Windows 98 File Explorer CSS */
+
+/* CSS Custom Properties for Consistency and Performance */
+:root {
+  --win98-bg: #c0c0c0;
+  --win98-bg-light: #d0d0d0;
+  --win98-bg-dark: #a0a0a0;
+  --win98-border-light: #dfdfdf;
+  --win98-border-dark: #808080;
+  --win98-border-black: #000000;
+  --win98-text: #000000;
+  --win98-text-disabled: #808080;
+  --win98-blue: #316AC5;
+  --win98-navy: #000080;
+  --win98-white: #ffffff;
+  --win98-font: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+  --win98-font-size: 11px;
+  --win98-selection-bg: #316AC5;
+  --win98-selection-border: #000080;
+}
 
 /* Main Container */
 .xp-file-explorer {
-  border: 2px inset #c0c0c0;
-  background: #c0c0c0;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-  font-size: 11px;
+  border: 2px inset var(--win98-bg);
+  background: var(--win98-bg);
+  font: var(--win98-font-size)/1.1 var(--win98-font);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
 }
 
-/* Address Bar */
+/* Address Bar and Navigation - Optimized */
 .xp-explorer-address-bar {
-  background: #c0c0c0;
-  border-bottom: 1px solid #808080;
+  background: var(--win98-bg);
+  border-bottom: 1px solid var(--win98-border-dark);
   padding: 4px 8px;
   display: flex;
   align-items: center;
@@ -23,51 +41,48 @@
   min-height: 24px;
 }
 
-/* Navigation Buttons */
 .xp-explorer-nav-buttons {
   display: flex;
   gap: 2px;
 }
 
 .xp-explorer-nav-button {
-  background: #c0c0c0;
-  border: 2px outset #c0c0c0;
+  background: var(--win98-bg);
+  border: 2px outset var(--win98-bg);
   padding: 2px 6px;
-  font-size: 11px;
+  font: inherit;
   cursor: pointer;
   user-select: none;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+  transition: none; /* Disable transitions for authentic feel */
 }
 
 .xp-explorer-nav-button:hover {
-  background: #d0d0d0;
+  background: var(--win98-bg-light);
 }
 
 .xp-explorer-nav-button:active {
-  border: 2px inset #c0c0c0;
-  background: #a0a0a0;
+  border: 2px inset var(--win98-bg);
+  background: var(--win98-bg-dark);
 }
 
 .xp-explorer-nav-button:disabled {
-  background: #c0c0c0;
-  color: #808080;
+  background: var(--win98-bg);
+  color: var(--win98-text-disabled);
   cursor: default;
-  border: 2px outset #c0c0c0;
+  border: 2px outset var(--win98-bg);
 }
 
-/* Breadcrumb Navigation */
+/* Breadcrumb Navigation - Optimized */
 .xp-explorer-breadcrumb {
   flex: 1;
   display: flex;
   align-items: center;
-  font-size: 11px;
 }
 
 .xp-explorer-breadcrumb-item {
-  color: #000080;
+  color: var(--win98-navy);
   cursor: pointer;
   text-decoration: underline;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
 }
 
 .xp-explorer-breadcrumb-item:hover {
@@ -75,21 +90,21 @@
 }
 
 .xp-explorer-breadcrumb-item.current {
-  color: #000000;
+  color: var(--win98-text);
   cursor: default;
   text-decoration: none;
   font-weight: bold;
 }
 
 .xp-explorer-breadcrumb-separator {
-  color: #000000;
+  color: var(--win98-text);
   margin: 0 4px;
 }
 
-/* Search Bar */
+/* Search Bar - Optimized */
 .xp-explorer-search-bar {
-  background: #c0c0c0;
-  border-bottom: 1px solid #808080;
+  background: var(--win98-bg);
+  border-bottom: 1px solid var(--win98-border-dark);
   padding: 4px 8px;
   min-height: 24px;
   display: flex;
@@ -98,29 +113,30 @@
 }
 
 .xp-explorer-search-input {
-  background: white;
-  border: 2px inset #c0c0c0;
+  background: var(--win98-white);
+  border: 2px inset var(--win98-bg);
   padding: 2px 24px 2px 4px;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
-  font-size: 11px;
-  color: #000;
+  font: inherit;
+  color: var(--win98-text);
   box-sizing: border-box;
   outline: none;
   flex: 1;
 }
 
 .xp-explorer-search-input:focus {
-  border: 2px inset #000080;
+  border-color: var(--win98-navy);
+  /* Enhanced focus outline for accessibility */
+  outline: 1px dotted var(--win98-navy);
+  outline-offset: -3px;
 }
 
 .xp-explorer-search-clear {
-  background: #c0c0c0;
-  border: 1px outset #c0c0c0;
+  background: var(--win98-bg);
+  border: 1px outset var(--win98-bg);
   width: 16px;
   height: 16px;
   font-size: 10px;
   cursor: pointer;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
   position: absolute;
   right: 12px;
   display: flex;
@@ -129,31 +145,36 @@
 }
 
 .xp-explorer-search-clear:hover {
-  background: #d0d0d0;
+  background: var(--win98-bg-light);
 }
 
 .xp-explorer-search-clear:active {
-  border: 1px inset #c0c0c0;
-  background: #a0a0a0;
+  border: 1px inset var(--win98-bg);
+  background: var(--win98-bg-dark);
 }
 
-/* Content Area */
+/* Content Area - Optimized */
 .xp-explorer-content {
   flex: 1;
   overflow: auto;
-  background: white;
+  background: var(--win98-white);
   position: relative;
-  border: 1px inset #c0c0c0;
+  border: 1px inset var(--win98-bg);
   margin: 2px;
+  /* Optimize scrolling performance */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: auto; /* Disable smooth scrolling for authentic feel */
 }
 
-/* Icons View */
+/* Icons View - Optimized */
 .xp-explorer-icons-view {
   padding: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 12px;
   align-content: start;
+  /* Optimize rendering */
+  contain: layout style;
 }
 
 .xp-explorer-item {
@@ -166,27 +187,33 @@
   cursor: pointer;
   user-select: none;
   min-height: 64px;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+  font: inherit;
+  /* Disable border-radius for authentic Windows 98 look */
   border-radius: 0;
+  /* Optimize for frequent repaints */
+  will-change: border-color, background-color;
 }
 
-/* Windows 98 authentic hover - very subtle */
+/* Enhanced Windows 98 authentic hover */
 .xp-explorer-item:hover:not(.xp-explorer-item-selected) {
-  border: 1px dotted #808080;
+  border: 1px dotted var(--win98-border-dark);
   background: rgba(128, 128, 128, 0.1);
 }
 
-/* Windows 98 authentic selection - high contrast blue */
+/* Enhanced Windows 98 authentic selection */
 .xp-explorer-item-selected {
-  background: #316AC5 !important;
-  color: white;
-  border: 1px dotted #000080;
+  background: var(--win98-selection-bg) !important;
+  color: var(--win98-white);
+  border: 1px dotted var(--win98-selection-border);
+  /* Enhanced focus outline for accessibility */
+  outline: 1px solid var(--win98-selection-border);
+  outline-offset: 1px;
 }
 
 /* Windows 98 selection focus rectangle */
 .xp-explorer-item-selected .xp-explorer-item-name {
-  background: #316AC5;
-  color: white;
+  background: var(--win98-selection-bg);
+  color: var(--win98-white);
   padding: 0 1px;
 }
 
@@ -194,30 +221,34 @@
   font-size: 32px;
   margin-bottom: 2px;
   line-height: 1;
-  filter: contrast(1.2) saturate(0.8); /* Make icons look less colorful/more Windows 98 */
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.3); /* Add slight depth like Windows 98 icons */
+  /* Enhanced Windows 98 icon appearance */
+  filter: contrast(1.2) saturate(0.8) drop-shadow(1px 1px 0 rgba(255,255,255,0.5));
+  /* Improved text shadow for better depth */
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.4), 0 0 1px rgba(0,0,0,0.2);
 }
 
 .xp-explorer-item-name {
-  font-size: 11px;
+  font: inherit;
   word-wrap: break-word;
   overflow-wrap: break-word;
   line-height: 1.1;
   max-width: 80px;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
   text-align: center;
   padding: 1px 2px;
   margin-top: 1px;
+  /* Optimize text rendering */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: auto;
 }
 
-/* Selected item name gets white background in Windows 98 */
+/* Enhanced selected item name styling */
 .xp-explorer-item-selected .xp-explorer-item-name {
-  background: #316AC5;
-  color: white;
-  border: 1px dotted #000080;
+  background: var(--win98-selection-bg);
+  color: var(--win98-white);
+  border: 1px dotted var(--win98-selection-border);
 }
 
-/* Details View */
+/* Details View - Optimized */
 .xp-explorer-details-view {
   display: flex;
   flex-direction: column;
@@ -225,71 +256,79 @@
 }
 
 .xp-explorer-details-header {
-  background: #c0c0c0;
-  border-bottom: 1px solid #808080;
+  background: var(--win98-bg);
+  border-bottom: 1px solid var(--win98-border-dark);
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 1px;
   position: sticky;
   top: 0;
   z-index: 10;
+  /* Optimize for fixed positioning */
+  contain: layout style;
 }
 
 .xp-explorer-details-col {
-  background: #c0c0c0;
-  border: 1px outset #c0c0c0;
-  border-bottom: 1px solid #808080;
+  background: var(--win98-bg);
+  border: 1px outset var(--win98-bg);
+  border-bottom: 1px solid var(--win98-border-dark);
   padding: 4px 8px;
   font-weight: bold;
-  color: #000;
+  color: var(--win98-text);
   user-select: none;
   cursor: pointer;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
 }
 
 .xp-explorer-details-col:hover {
-  background: #d0d0d0;
+  background: var(--win98-bg-light);
 }
 
 .xp-explorer-details-col:active {
-  border: 1px inset #c0c0c0;
-  background: #a0a0a0;
+  border: 1px inset var(--win98-bg);
+  background: var(--win98-bg-dark);
 }
 
 .xp-explorer-details-content {
   flex: 1;
   overflow-y: auto;
+  /* Optimize scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 .xp-explorer-details-row {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1.5fr;
   gap: 1px;
-  border-bottom: 1px solid #c0c0c0;
+  border-bottom: 1px solid var(--win98-bg);
   cursor: pointer;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+  font: inherit;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
+  /* Optimize for frequent hover changes */
+  will-change: background-color, border-color;
 }
 
-/* Windows 98 authentic hover for details view */
+/* Enhanced Windows 98 authentic hover for details view */
 .xp-explorer-details-row:hover:not(.xp-explorer-details-row-selected) {
   background: rgba(49, 106, 197, 0.1);
-  border-left: 1px dotted #316AC5;
-  border-right: 1px dotted #316AC5;
+  border-left: 1px dotted var(--win98-selection-bg);
+  border-right: 1px dotted var(--win98-selection-bg);
 }
 
-/* Windows 98 authentic selection for details view */
+/* Enhanced Windows 98 authentic selection for details view */
 .xp-explorer-details-row-selected {
-  background: #316AC5 !important;
-  color: white;
-  border-left: 1px solid #000080;
-  border-right: 1px solid #000080;
+  background: var(--win98-selection-bg) !important;
+  color: var(--win98-white);
+  border-left: 1px solid var(--win98-selection-border);
+  border-right: 1px solid var(--win98-selection-border);
+  /* Enhanced focus outline */
+  outline: 1px solid var(--win98-selection-border);
+  outline-offset: -1px;
 }
 
 .xp-explorer-details-cell {
   padding: 2px 8px;
-  border-right: 1px solid #c0c0c0;
+  border-right: 1px solid var(--win98-bg);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -301,8 +340,8 @@
 .xp-explorer-details-cell .xp-explorer-item-icon {
   font-size: 16px;
   flex-shrink: 0;
-  filter: contrast(1.2) saturate(0.8);
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+  filter: contrast(1.2) saturate(0.8) drop-shadow(1px 1px 0 rgba(255,255,255,0.3));
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
   margin-right: 2px;
 }
 
@@ -313,19 +352,18 @@
   margin: 0;
 }
 
-/* Status Bar */
+/* Status Bar - Optimized */
 .xp-explorer-status {
-  background: #c0c0c0;
-  border-top: 1px solid #808080;
-  border: 1px inset #c0c0c0;
+  background: var(--win98-bg);
+  border-top: 1px solid var(--win98-border-dark);
+  border: 1px inset var(--win98-bg);
   padding: 2px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
-  color: #000;
+  font: inherit;
+  color: var(--win98-text);
   min-height: 20px;
-  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
 }
 
 .xp-explorer-status-left {
@@ -334,10 +372,10 @@
 
 .xp-explorer-status-right {
   flex-shrink: 0;
-  color: #000;
+  color: var(--win98-text);
 }
 
-/* Scrollbars (Windows 98 Style) */
+/* Enhanced Windows 98 Scrollbars */
 .xp-explorer-content::-webkit-scrollbar,
 .xp-explorer-details-content::-webkit-scrollbar {
   width: 16px;
@@ -346,54 +384,93 @@
 
 .xp-explorer-content::-webkit-scrollbar-track,
 .xp-explorer-details-content::-webkit-scrollbar-track {
-  background: #c0c0c0;
-  border: 1px inset #c0c0c0;
+  background: var(--win98-bg);
+  border: 1px inset var(--win98-bg);
+  /* Add dithered pattern for authentic Windows 98 look */
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.1) 1px, transparent 0),
+    radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0);
+  background-size: 2px 2px;
 }
 
 .xp-explorer-content::-webkit-scrollbar-thumb,
 .xp-explorer-details-content::-webkit-scrollbar-thumb {
-  background: #c0c0c0;
-  border: 2px outset #c0c0c0;
+  background: var(--win98-bg);
+  border: 2px outset var(--win98-bg);
   min-height: 20px;
+  /* Add subtle gradient for depth */
+  background-image: linear-gradient(135deg, var(--win98-border-light) 0%, var(--win98-bg) 50%, var(--win98-border-dark) 100%);
 }
 
 .xp-explorer-content::-webkit-scrollbar-thumb:hover,
 .xp-explorer-details-content::-webkit-scrollbar-thumb:hover {
-  background: #d0d0d0;
+  background: var(--win98-bg-light);
+  background-image: linear-gradient(135deg, #e8e8e8 0%, var(--win98-bg-light) 50%, #b8b8b8 100%);
 }
 
 .xp-explorer-content::-webkit-scrollbar-thumb:active,
 .xp-explorer-details-content::-webkit-scrollbar-thumb:active {
-  border: 2px inset #c0c0c0;
-  background: #a0a0a0;
+  border: 2px inset var(--win98-bg);
+  background: var(--win98-bg-dark);
+  background-image: linear-gradient(135deg, #909090 0%, var(--win98-bg-dark) 50%, var(--win98-border-light) 100%);
 }
 
 .xp-explorer-content::-webkit-scrollbar-corner,
 .xp-explorer-details-content::-webkit-scrollbar-corner {
-  background: #c0c0c0;
+  background: var(--win98-bg);
 }
 
-/* Scrollbar buttons (arrows) */
+/* Enhanced scrollbar buttons with arrows */
 .xp-explorer-content::-webkit-scrollbar-button,
 .xp-explorer-details-content::-webkit-scrollbar-button {
-  background: #c0c0c0;
-  border: 1px outset #c0c0c0;
+  background: var(--win98-bg);
+  border: 1px outset var(--win98-bg);
   width: 16px;
   height: 16px;
 }
 
 .xp-explorer-content::-webkit-scrollbar-button:hover,
 .xp-explorer-details-content::-webkit-scrollbar-button:hover {
-  background: #d0d0d0;
+  background: var(--win98-bg-light);
 }
 
 .xp-explorer-content::-webkit-scrollbar-button:active,
 .xp-explorer-details-content::-webkit-scrollbar-button:active {
-  border: 1px inset #c0c0c0;
-  background: #a0a0a0;
+  border: 1px inset var(--win98-bg);
+  background: var(--win98-bg-dark);
 }
 
-/* Responsive Design */
+/* Focus Management for Accessibility */
+.xp-explorer-item:focus,
+.xp-explorer-details-row:focus,
+.xp-explorer-nav-button:focus,
+.xp-explorer-details-col:focus {
+  outline: 2px dotted var(--win98-text);
+  outline-offset: -2px;
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+  :root {
+    --win98-selection-bg: #000080;
+    --win98-selection-border: #000000;
+  }
+  
+  .xp-explorer-item-selected,
+  .xp-explorer-details-row-selected {
+    outline: 2px solid var(--win98-text);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .xp-explorer-item,
+  .xp-explorer-details-row {
+    transition: none;
+  }
+}
+
+/* Optimized Responsive Design */
 @media (max-width: 600px) {
   .xp-explorer-icons-view {
     grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
@@ -408,10 +485,7 @@
     font-size: 24px;
   }
   
-  .xp-explorer-details-header {
-    grid-template-columns: 2fr 0.8fr 0.8fr 1fr;
-  }
-  
+  .xp-explorer-details-header,
   .xp-explorer-details-row {
     grid-template-columns: 2fr 0.8fr 0.8fr 1fr;
   }
@@ -427,11 +501,12 @@
   }
 }
 
-/* Print Styles */
+/* Optimized Print Styles */
 @media print {
   .xp-file-explorer {
-    border: 1px solid #000;
-    background: white;
+    border: 1px solid var(--win98-black);
+    background: var(--win98-white);
+    color-adjust: exact;
   }
   
   .xp-explorer-address-bar,

@@ -1,31 +1,8 @@
-import { JSX, mergeProps, splitProps, For, Show } from 'solid-js';
+import { mergeProps, splitProps, For, Show } from 'solid-js';
 import { cn } from '../utils/cn';
+import { TableProps, TableColumn } from '../types';
 
-interface TableColumn<T = any> {
-  key: string;
-  header: string;
-  width?: string | number;
-  sortable?: boolean;
-  render?: (value: any, item: T, index: number) => JSX.Element;
-}
-
-interface TableProps<T = any> {
-  data?: T[];
-  columns?: TableColumn<T>[];
-  striped?: boolean;
-  bordered?: boolean;
-  hoverable?: boolean;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
-  onSort?: (column: string) => void;
-  onRowClick?: (item: T, index: number) => void;
-  onRowDoubleClick?: (item: T, index: number) => void;
-  selectedRow?: number;
-  class?: string;
-  children?: JSX.Element;
-}
-
-export function Table<T = any>(props: TableProps<T>) {
+export function Table<T = Record<string, unknown>>(props: TableProps<T>) {
   const merged = mergeProps({ 
     data: [],
     columns: [],

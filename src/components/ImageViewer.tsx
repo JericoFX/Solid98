@@ -1,10 +1,11 @@
-import { JSX, createSignal, mergeProps, splitProps, For, Show } from 'solid-js';
+import { createSignal, mergeProps, splitProps, For, Show } from 'solid-js';
 import { cn } from '../utils/cn';
 import { Window } from './Window';
 import { StatusBar } from './StatusBar';
 import { Button } from './Button';
 import { SunkenPanel } from './SunkenPanel';
 import { Modal } from './Modal';
+import type { JSX } from 'solid-js';
 
 interface ImageItem {
   id: string;
@@ -155,7 +156,7 @@ export function ImageViewer(props: ImageViewerProps) {
         </div>
         
         {/* Main Content Area */}
-        <div style="display: flex; height: 400px; gap: 4px; margin: 4px;">
+        <div style="display: flex; height: 300px; gap: 4px; margin: 4px;">
           {/* Main Image Display */}
           <div style="flex: 1; display: flex; flex-direction: column;">
             <SunkenPanel style="flex: 1; padding: 8px; background: #c0c0c0; overflow: auto;">

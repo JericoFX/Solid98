@@ -1,4 +1,4 @@
-import { JSX, mergeProps, splitProps, For, Show } from 'solid-js';
+import { mergeProps, splitProps, For, Show } from 'solid-js';
 import { cn } from '../utils/cn';
 import { StatusBarProps } from '../types';
 

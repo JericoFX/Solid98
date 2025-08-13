@@ -1,10 +1,26 @@
-import { JSX, mergeProps, splitProps } from 'solid-js';
+import { mergeProps, splitProps } from 'solid-js';
 import { cn } from '../utils/cn';
 import { ButtonProps } from '../types';
 
 export function Button(props: ButtonProps) {
   const merged = mergeProps({ variant: 'normal' as const }, props);
-  const [local, others] = splitProps(merged, ['variant', 'disabled', 'class', 'children']);
+  const [local, others] = splitProps(merged, ['variant', 'disabled', 'class', 'children', 'onClick']);
+
+  // Enhanced click handler with sound effect animation
+  const handleClick = (e: MouseEvent) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    
+    // Add visual sound effect
+    target.classList.add('win98-sound-effect');
+    setTimeout(() => {
+      target.classList.remove('win98-sound-effect');
+    }, 200);
+    
+    // Call original click handler
+    if (local.onClick && typeof local.onClick === 'function') {
+      local.onClick(e);
+    }
+  };
 
   return (
     <button
@@ -14,6 +30,7 @@ export function Button(props: ButtonProps) {
         local.class
       )}
       disabled={local.disabled}
+      onClick={handleClick}
       {...others}
     >
       {local.children}

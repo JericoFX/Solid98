@@ -1,5 +1,4 @@
 import {
-  JSX,
   createSignal,
   createMemo,
   mergeProps,

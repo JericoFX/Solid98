@@ -1,4 +1,4 @@
-import { JSX, mergeProps, splitProps, For, Show, createSignal } from 'solid-js';
+import { mergeProps, splitProps, For, Show, createSignal } from 'solid-js';
 import { cn } from '../utils/cn';
 import { TreeViewProps, TreeNode } from '../types';
 

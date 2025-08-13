@@ -1,8 +1,9 @@
-import { JSX, createSignal, mergeProps, splitProps, Show } from 'solid-js';
+import { createSignal, mergeProps, splitProps, Show } from 'solid-js';
 import { cn } from '../utils/cn';
 import { Window } from './Window';
 import { StatusBar } from './StatusBar';
 import { Button } from './Button';
+import type { JSX } from 'solid-js';
 
 interface NotepadProps {
   title?: string;
@@ -28,7 +29,6 @@ export function Notepad(props: NotepadProps) {
   const [statusBar, setStatusBar] = createSignal(true);
   const [findText, setFindText] = createSignal('');
   const [showFind, setShowFind] = createSignal(false);
-  const [selectionStart, setSelectionStart] = createSignal(0);
   const [selectionEnd, setSelectionEnd] = createSignal(0);
   
   let textareaRef: HTMLTextAreaElement | undefined;
@@ -107,13 +107,11 @@ export function Notepad(props: NotepadProps) {
       // Search from beginning
       const beginIndex = text.indexOf(search, 0);
       if (beginIndex !== -1) {
-        setSelectionStart(beginIndex);
         setSelectionEnd(beginIndex + search.length);
         textareaRef?.setSelectionRange(beginIndex, beginIndex + search.length);
         textareaRef?.focus();
       }
     } else {
-      setSelectionStart(index);
       setSelectionEnd(index + search.length);
       textareaRef?.setSelectionRange(index, index + search.length);
       textareaRef?.focus();
@@ -139,7 +137,6 @@ export function Notepad(props: NotepadProps) {
   
   const handleSelectionChange = () => {
     if (textareaRef) {
-      setSelectionStart(textareaRef.selectionStart);
       setSelectionEnd(textareaRef.selectionEnd);
     }
   };
@@ -151,7 +148,7 @@ export function Notepad(props: NotepadProps) {
       {...others}
     >
       {/* Toolbar */}
-      <div style="display: flex; gap: 4px; padding: 4px; border-bottom: 1px solid #c0c0c0; background: #c0c0c0;">
+      <div style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-bottom: 1px solid #c0c0c0; background: #c0c0c0; min-height: 32px;">
         <Button onClick={handleNew}>New</Button>
         <Button onClick={handleOpen}>Open</Button>
         <Button onClick={handleSave}>Save</Button>

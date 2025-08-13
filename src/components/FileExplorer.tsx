@@ -1,4 +1,4 @@
-import { JSX, createSignal, mergeProps, splitProps, For, Show, createMemo } from 'solid-js';
+import { createSignal, mergeProps, splitProps, For, Show, createMemo } from 'solid-js';
 import { cn } from '../utils/cn';
 import { FileExplorerProps, FileItem } from '../types';
 import './FileExplorer.css';
@@ -13,7 +13,7 @@ export function FileExplorer(props: FileExplorerProps) {
       currentPath: '',
       data: [],
       width: '100%',
-      height: '400px'
+      height: '500px'
     },
     props
   );

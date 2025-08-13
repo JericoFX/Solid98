@@ -3,6 +3,7 @@ import { JSX } from 'solid-js';
 export interface BaseComponentProps {
   class?: string;
   children?: JSX.Element;
+  style?: JSX.CSSProperties | string;
 }
 
 export interface WindowProps extends BaseComponentProps {
@@ -121,15 +122,15 @@ export interface TabProps extends BaseComponentProps {
   selected?: boolean;
 }
 
-export interface TableColumn<T = any> {
+export interface TableColumn<T = Record<string, unknown>> {
   key: string;
   header: string;
   width?: string | number;
   sortable?: boolean;
-  render?: (value: any, item: T, index: number) => JSX.Element;
+  render?: (value: unknown, item: T, index: number) => JSX.Element;
 }
 
-export interface TableProps<T = any> extends BaseComponentProps {
+export interface TableProps<T = Record<string, unknown>> extends BaseComponentProps {
   data?: T[];
   columns?: TableColumn<T>[];
   striped?: boolean;

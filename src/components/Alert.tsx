@@ -1,4 +1,4 @@
-import { JSX, mergeProps, splitProps, Show, createEffect, onMount, onCleanup } from 'solid-js';
+import { mergeProps, splitProps, Show, createEffect, onMount, onCleanup } from 'solid-js';
 import { cn } from '../utils/cn';
 
 // Windows 98 style icons as SVG data URLs

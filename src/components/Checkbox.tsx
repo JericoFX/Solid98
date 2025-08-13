@@ -1,5 +1,4 @@
-import { JSX, splitProps, createUniqueId, Show } from 'solid-js';
-import { cn } from '../utils/cn';
+import { splitProps, createUniqueId, Show } from 'solid-js';
 import { CheckboxProps } from '../types';
 
 export function Checkbox(props: CheckboxProps) {

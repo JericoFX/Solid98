@@ -1,4 +1,4 @@
-import { JSX, mergeProps, splitProps, Show } from 'solid-js';
+import { mergeProps, splitProps, Show } from 'solid-js';
 import { cn } from '../utils/cn';
 import { WindowHeaderProps } from '../types';
 

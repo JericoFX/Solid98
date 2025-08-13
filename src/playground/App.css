@@ -1,4 +1,19 @@
-/* Playground-specific styles */
+/* Optimized Playground Styles - Uses CSS Variables from win98-core.css */
+
+/* Simple app transition */
+.playground-app {
+  opacity: 1;
+  transform: none;
+}
+
+.win98-appear {
+  animation: win98FadeIn 0.3s ease-in;
+}
+
+@keyframes win98FadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 .playground-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));

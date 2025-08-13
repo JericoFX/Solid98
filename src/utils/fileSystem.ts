@@ -255,10 +255,10 @@ export class FileSystemNavigator {
 /**
  * Helper function to create custom file systems easily
  */
-export function createFileSystem(structure: any): FileSystemStructure {
+export function createFileSystem(structure: Record<string, unknown>): FileSystemStructure {
   const result: FileSystemStructure = {};
   
-  function processStructure(obj: any, basePath: string = ''): void {
+  function processStructure(obj: Record<string, unknown>, basePath: string = ''): void {
     for (const [key, value] of Object.entries(obj)) {
       const currentPath = basePath ? `${basePath}/${key}` : key;
       
@@ -268,7 +268,7 @@ export function createFileSystem(structure: any): FileSystemStructure {
       } else if (typeof value === 'object' && value !== null) {
         // It's a nested structure
         result[currentPath] = {};
-        processStructure(value, currentPath);
+        processStructure(value as Record<string, unknown>, currentPath);
       }
     }
   }
