@@ -1,23 +1,17 @@
-import { JSX, mergeProps, splitProps, Show, createEffect, onMount, onCleanup } from 'solid-js';
+import { mergeProps, splitProps, Show, createEffect, onMount, onCleanup } from 'solid-js';
 import { cn } from '../utils/cn';
+import { ModalProps } from '../types';
 
-interface ModalProps {
-  open?: boolean;
-  title?: string;
-  onClose?: () => void;
-  children?: JSX.Element;
-  class?: string;
-  showCloseButton?: boolean;
-  width?: string | number;
-  height?: string | number;
-}
+// Enhanced Modal with more Windows 98 features
 
 export function Modal(props: ModalProps) {
   const merged = mergeProps({ 
     open: false, 
     showCloseButton: true,
     width: 'auto',
-    height: 'auto'
+    height: 'auto',
+    modal: true,
+    movable: false
   }, props);
   const [local, others] = splitProps(merged, [
     'open', 
@@ -27,7 +21,9 @@ export function Modal(props: ModalProps) {
     'class', 
     'showCloseButton',
     'width',
-    'height'
+    'height',
+    'modal',
+    'movable'
   ]);
 
   let modalRef: HTMLDivElement | undefined;

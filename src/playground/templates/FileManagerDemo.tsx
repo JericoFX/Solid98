@@ -36,12 +36,12 @@ export const FileManagerDemo: Component = () => {
   // Get current directory data
   const getCurrentData = () => fileSystemData[currentPath()] || [];
 
-  const handleNavigate = (path: string, item: FileItem) => {
+  const handleNavigate = (path: string, _item: FileItem) => {
     setCurrentPath(path);
     setSelectedFiles([]); // Clear selection when navigating
   };
 
-  const handleFileSelect = (item: FileItem, selectedItems: string[]) => {
+  const handleFileSelect = (_item: FileItem, selectedItems: string[]) => {
     setSelectedFiles(selectedItems);
   };
 

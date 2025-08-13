@@ -5,6 +5,11 @@ interface ComponentCardProps {
   title: string;
   description: string;
   category: string;
+  complexity?: 'Simple' | 'Moderate' | 'Advanced';
+  status?: 'Stable' | 'Experimental' | 'Deprecated';
+  accessibility?: 'Full' | 'Partial' | 'Basic';
+  tags?: string[];
+  commonUseCase?: string;
   preview: JSXElement;
   codeSnippet?: string;
   onPlayground?: () => void;
@@ -31,38 +36,108 @@ export const ComponentCard: Component<ComponentCardProps> = (props) => {
     }}>
       {/* Header */}
       <div style={{
-        display: 'flex',
-        'justify-content': 'space-between',
-        'align-items': 'center',
         'margin-bottom': '8px'
       }}>
-        <h4 style={{
-          margin: '0',
-          'font-family': 'MS Sans Serif, sans-serif',
-          'font-size': '12px',
-          'font-weight': 'bold'
+        <div style={{
+          display: 'flex',
+          'justify-content': 'space-between',
+          'align-items': 'center',
+          'margin-bottom': '4px'
         }}>
-          {props.title}
-        </h4>
-        <span style={{
-          'font-size': '9px',
-          color: '#666',
-          'text-transform': 'uppercase',
-          'letter-spacing': '1px'
-        }}>
-          {props.category}
-        </span>
+          <h4 style={{
+            margin: '0',
+            'font-family': 'MS Sans Serif, sans-serif',
+            'font-size': '12px',
+            'font-weight': 'bold'
+          }}>
+            {props.title}
+          </h4>
+          <span style={{
+            'font-size': '9px',
+            color: '#666',
+            'text-transform': 'uppercase',
+            'letter-spacing': '1px'
+          }}>
+            {props.category}
+          </span>
+        </div>
+        
+        {/* Metadata badges */}
+        <div style={{ display: 'flex', gap: '4px', 'flex-wrap': 'wrap' }}>
+          {props.complexity && (
+            <span style={{
+              'font-size': '8px',
+              padding: '1px 4px',
+              'background-color': props.complexity === 'Simple' ? '#90ee90' : props.complexity === 'Moderate' ? '#ffd700' : '#ff6b6b',
+              border: '1px inset',
+              color: '#000'
+            }}>
+              {props.complexity}
+            </span>
+          )}
+          {props.status && (
+            <span style={{
+              'font-size': '8px',
+              padding: '1px 4px',
+              'background-color': props.status === 'Stable' ? '#87ceeb' : props.status === 'Experimental' ? '#dda0dd' : '#f0a0a0',
+              border: '1px inset',
+              color: '#000'
+            }}>
+              {props.status}
+            </span>
+          )}
+          {props.accessibility && (
+            <span style={{
+              'font-size': '8px',
+              padding: '1px 4px',
+              'background-color': props.accessibility === 'Full' ? '#98fb98' : props.accessibility === 'Partial' ? '#f0e68c' : '#ffa07a',
+              border: '1px inset',
+              color: '#000'
+            }}>
+              A11Y: {props.accessibility}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Description */}
-      <p style={{
-        'font-size': '11px',
-        'line-height': '1.3',
-        'margin-bottom': '12px',
-        color: '#333'
-      }}>
-        {props.description}
-      </p>
+      <div style={{ 'margin-bottom': '12px' }}>
+        <p style={{
+          'font-size': '11px',
+          'line-height': '1.3',
+          'margin-bottom': props.commonUseCase ? '4px' : '0',
+          color: '#333'
+        }}>
+          {props.description}
+        </p>
+        {props.commonUseCase && (
+          <p style={{
+            'font-size': '10px',
+            'line-height': '1.2',
+            color: '#666',
+            'font-style': 'italic',
+            margin: '0'
+          }}>
+            💡 Common use: {props.commonUseCase}
+          </p>
+        )}
+        {props.tags && props.tags.length > 0 && (
+          <div style={{ 'margin-top': '4px' }}>
+            {props.tags.map(tag => (
+              <span style={{
+                'font-size': '8px',
+                padding: '1px 3px',
+                'background-color': '#f0f0f0',
+                border: '1px solid #ccc',
+                'margin-right': '2px',
+                color: '#555'
+              }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Preview */}
       <SunkenPanel style={{ 

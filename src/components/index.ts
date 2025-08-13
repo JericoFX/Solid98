@@ -18,3 +18,11 @@ export { FileExplorer } from './FileExplorer';
 export { NavigableFileExplorer } from './NavigableFileExplorer';
 export { ImageViewer } from './ImageViewer';
 export { Notepad } from './Notepad';
+
+// New components
+export { MenuBar } from './MenuBar';
+export { TextInput } from './TextInput';
+export { TextArea } from './TextArea';
+export { Toolbar } from './Toolbar';
+export { GroupBox } from './GroupBox';
+export { ListBox } from './ListBox';

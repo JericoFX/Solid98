@@ -50,9 +50,9 @@ export function Table<T = Record<string, unknown>>(props: TableProps<T>) {
 
   const getCellValue = (item: T, column: TableColumn<T>, index: number) => {
     if (column.render) {
-      return column.render((item as any)[column.key], item, index);
+      return column.render((item as Record<string, unknown>)[column.key], item, index);
     }
-    return (item as any)[column.key];
+    return String((item as Record<string, unknown>)[column.key] ?? '');
   };
 
   return (

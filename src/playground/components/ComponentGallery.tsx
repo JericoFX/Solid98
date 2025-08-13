@@ -14,7 +14,13 @@ import {
   Tabs,
   Tab,
   Table,
-  FieldRow
+  FieldRow,
+  MenuBar,
+  TextInput,
+  TextArea,
+  Toolbar,
+  GroupBox,
+  ListBox
 } from '../../index';
 import { TreeNode, TableColumn } from '../../types';
 
@@ -22,10 +28,17 @@ interface ComponentInfo {
   id: string;
   title: string;
   description: string;
-  category: string;
+  category: 'Basic UI' | 'Windows' | 'Status' | 'Advanced' | 'Layout' | 'Data';
+  complexity?: 'Simple' | 'Moderate' | 'Advanced';
+  status?: 'Stable' | 'Experimental' | 'Deprecated';
+  accessibility?: 'Full' | 'Partial' | 'Basic';
+  tags?: string[];
+  relatedComponents?: string[];
   preview: () => any;
   codeSnippet: string;
   searchTerms: string[];
+  usageExamples?: string[];
+  commonUseCase?: string;
 }
 
 export const ComponentGallery: Component = () => {
@@ -54,6 +67,13 @@ export const ComponentGallery: Component = () => {
       title: 'Button',
       description: 'Classic Windows 98 buttons with hover states and variants.',
       category: 'Basic UI',
+      complexity: 'Simple',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['interactive', 'form', 'action'],
+      relatedComponents: ['checkbox', 'radio'],
+      commonUseCase: 'Form submissions, dialog actions, toolbar buttons',
+      usageExamples: ['Submit forms', 'Close dialogs', 'Trigger actions'],
       preview: () => (
         <div style={{ display: 'flex', gap: '8px' }}>
           <Button variant="default">Default</Button>
@@ -61,7 +81,7 @@ export const ComponentGallery: Component = () => {
         </div>
       ),
       codeSnippet: `<Button variant="default">Default</Button>\n<Button>Normal</Button>`,
-      searchTerms: ['button', 'click', 'action', 'submit']
+      searchTerms: ['button', 'click', 'action', 'submit', 'interactive']
     },
     {
       id: 'checkbox',
@@ -130,6 +150,13 @@ export const ComponentGallery: Component = () => {
       title: 'Window',
       description: 'Classic Windows 98 windows with title bars and controls.',
       category: 'Windows',
+      complexity: 'Moderate',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['container', 'modal', 'draggable'],
+      relatedComponents: ['sunkenpanel', 'statusbar'],
+      commonUseCase: 'Application windows, dialogs, floating panels',
+      usageExamples: ['Main application window', 'Settings dialog', 'About box'],
       preview: () => (
         <div style={{ transform: 'scale(0.7)', 'transform-origin': 'top left' }}>
           <Window title="Example" active style={{ width: '200px', height: '100px' }}>
@@ -138,7 +165,7 @@ export const ComponentGallery: Component = () => {
         </div>
       ),
       codeSnippet: `<Window title="My Window" active>\n  <div>Window content here</div>\n</Window>`,
-      searchTerms: ['window', 'dialog', 'frame', 'container']
+      searchTerms: ['window', 'dialog', 'frame', 'container', 'modal']
     },
     {
       id: 'sunkenpanel',
@@ -208,7 +235,14 @@ export const ComponentGallery: Component = () => {
       id: 'table',
       title: 'Table',
       description: 'Data tables with sorting and selection.',
-      category: 'Advanced',
+      category: 'Data',
+      complexity: 'Advanced',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['data', 'sortable', 'selectable', 'grid'],
+      relatedComponents: ['treeview'],
+      commonUseCase: 'Displaying structured data with sorting and selection',
+      usageExamples: ['File listings', 'User management', 'Data reports'],
       preview: () => (
         <div style={{ width: '180px', height: '80px', overflow: 'hidden' }}>
           <Table
@@ -219,7 +253,168 @@ export const ComponentGallery: Component = () => {
         </div>
       ),
       codeSnippet: `<Table\n  data={tableData}\n  columns={columns}\n  striped\n  hoverable\n  sortBy={sortBy()}\n  onSort={handleSort}\n/>`,
-      searchTerms: ['table', 'data', 'grid', 'sort', 'list']
+      searchTerms: ['table', 'data', 'grid', 'sort', 'list', 'rows', 'columns']
+    },
+
+    // New Components
+    {
+      id: 'menubar',
+      title: 'Menu Bar',
+      description: 'Classic Windows 98 menu bar with dropdown menus and shortcuts.',
+      category: 'Windows',
+      complexity: 'Advanced',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['navigation', 'menu', 'dropdown', 'shortcuts'],
+      relatedComponents: ['toolbar', 'window'],
+      commonUseCase: 'Application menu systems, navigation bars, context menus',
+      usageExamples: ['File/Edit/View menus', 'Application navigation', 'Context actions'],
+      preview: () => (
+        <div style={{ width: '200px', transform: 'scale(0.8)', 'transform-origin': 'top left' }}>
+          <MenuBar items={[
+            {
+              id: 'file',
+              label: 'File',
+              submenu: [
+                { id: 'new', label: 'New', shortcut: 'Ctrl+N', onClick: () => {} },
+                { id: 'open', label: 'Open', shortcut: 'Ctrl+O', onClick: () => {} },
+                { id: 'sep1', label: '', separator: true },
+                { id: 'exit', label: 'Exit', onClick: () => {} }
+              ]
+            },
+            {
+              id: 'edit',
+              label: 'Edit',
+              submenu: [
+                { id: 'cut', label: 'Cut', shortcut: 'Ctrl+X', onClick: () => {} },
+                { id: 'copy', label: 'Copy', shortcut: 'Ctrl+C', onClick: () => {} }
+              ]
+            }
+          ]} />
+        </div>
+      ),
+      codeSnippet: `<MenuBar items={[\n  {\n    id: 'file',\n    label: 'File',\n    submenu: [\n      { id: 'new', label: 'New', shortcut: 'Ctrl+N' },\n      { id: 'open', label: 'Open', shortcut: 'Ctrl+O' }\n    ]\n  }\n]} />`,
+      searchTerms: ['menu', 'menubar', 'navigation', 'dropdown', 'file', 'edit']
+    },
+    {
+      id: 'textinput',
+      title: 'Text Input',
+      description: 'Single-line text input with authentic Windows 98 styling.',
+      category: 'Basic UI',
+      complexity: 'Simple',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['input', 'form', 'text', 'field'],
+      relatedComponents: ['textarea', 'fieldrow'],
+      commonUseCase: 'Form fields, search boxes, user input',
+      usageExamples: ['Name fields', 'Search inputs', 'Login forms'],
+      preview: () => (
+        <div style={{ display: 'flex', 'flex-direction': 'column', gap: '8px' }}>
+          <TextInput placeholder="Enter text..." value="" />
+          <TextInput type="password" placeholder="Password" value="" />
+        </div>
+      ),
+      codeSnippet: `<TextInput placeholder="Enter text..." />\n<TextInput type="password" placeholder="Password" />`,
+      searchTerms: ['textinput', 'input', 'text', 'field', 'form']
+    },
+    {
+      id: 'textarea',
+      title: 'Text Area',
+      description: 'Multi-line text input for longer content.',
+      category: 'Basic UI',
+      complexity: 'Simple',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['textarea', 'multiline', 'text', 'form'],
+      relatedComponents: ['textinput', 'fieldrow'],
+      commonUseCase: 'Comments, descriptions, multi-line text input',
+      usageExamples: ['Comment boxes', 'Description fields', 'Code editors'],
+      preview: () => (
+        <TextArea 
+          placeholder="Enter multi-line text..." 
+          rows={3} 
+          style={{ width: '180px' }}
+          value=""
+        />
+      ),
+      codeSnippet: `<TextArea \n  placeholder="Enter text..."\n  rows={4}\n  style={{ width: '300px' }}\n/>`,
+      searchTerms: ['textarea', 'multiline', 'text', 'input', 'form']
+    },
+    {
+      id: 'toolbar',
+      title: 'Toolbar',
+      description: 'Icon-based toolbar with buttons, separators, and toggles.',
+      category: 'Windows',
+      complexity: 'Moderate',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['toolbar', 'buttons', 'icons', 'actions'],
+      relatedComponents: ['menubar', 'button'],
+      commonUseCase: 'Application toolbars, action bars, quick access buttons',
+      usageExamples: ['File operations', 'Formatting tools', 'Quick actions'],
+      preview: () => (
+        <div style={{ transform: 'scale(0.8)', 'transform-origin': 'top left' }}>
+          <Toolbar items={[
+            { id: 'new', type: 'button', icon: '📄', label: 'New', tooltip: 'Create new file' },
+            { id: 'open', type: 'button', icon: '📂', label: 'Open', tooltip: 'Open file' },
+            { id: 'sep1', type: 'separator' },
+            { id: 'bold', type: 'toggle', icon: '𝐁', label: 'Bold', active: false },
+            { id: 'italic', type: 'toggle', icon: '𝐼', label: 'Italic', active: true }
+          ]} size="small" />
+        </div>
+      ),
+      codeSnippet: `<Toolbar items={[\n  { id: 'new', type: 'button', icon: '📄', label: 'New' },\n  { id: 'sep1', type: 'separator' },\n  { id: 'bold', type: 'toggle', icon: 'B', active: false }\n]} />`,
+      searchTerms: ['toolbar', 'buttons', 'icons', 'actions', 'tools']
+    },
+    {
+      id: 'groupbox',
+      title: 'Group Box',
+      description: 'Container with labeled border for grouping related controls.',
+      category: 'Layout',
+      complexity: 'Simple',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['container', 'fieldset', 'group', 'border'],
+      relatedComponents: ['sunkenpanel', 'fieldrow'],
+      commonUseCase: 'Form sections, related controls grouping, settings panels',
+      usageExamples: ['User preferences', 'Form sections', 'Option groups'],
+      preview: () => (
+        <GroupBox legend="Display Options" style={{ width: '150px', padding: '8px' }}>
+          <Checkbox id="gb-check1" label="Show grid" checked={true} />
+          <br />
+          <Checkbox id="gb-check2" label="Show rulers" checked={false} />
+        </GroupBox>
+      ),
+      codeSnippet: `<GroupBox legend="Display Options">\n  <Checkbox label="Show grid" />\n  <Checkbox label="Show rulers" />\n</GroupBox>`,
+      searchTerms: ['groupbox', 'fieldset', 'container', 'group', 'border']
+    },
+    {
+      id: 'listbox',
+      title: 'List Box',
+      description: 'Selectable list with single and multi-select support.',
+      category: 'Data',
+      complexity: 'Moderate',
+      status: 'Stable',
+      accessibility: 'Full',
+      tags: ['list', 'select', 'multiselect', 'items'],
+      relatedComponents: ['select', 'table'],
+      commonUseCase: 'Item selection, file lists, option choosing',
+      usageExamples: ['File selection', 'Multiple choice', 'Item picking'],
+      preview: () => (
+        <div style={{ width: '120px' }}>
+          <ListBox 
+            items={[
+              { id: 1, label: 'Item 1', icon: '📄' },
+              { id: 2, label: 'Item 2', icon: '📁', selected: true },
+              { id: 3, label: 'Item 3', icon: '📄' },
+              { id: 4, label: 'Item 4', icon: '🖼', disabled: true }
+            ]}
+            size={3}
+          />
+        </div>
+      ),
+      codeSnippet: `<ListBox \n  items={[\n    { id: 1, label: 'Item 1', icon: '📄' },\n    { id: 2, label: 'Item 2', selected: true }\n  ]}\n  multiSelect={false}\n/>`,
+      searchTerms: ['listbox', 'list', 'select', 'items', 'multiple']
     }
   ];
 

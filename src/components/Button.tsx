@@ -7,8 +7,8 @@ export function Button(props: ButtonProps) {
   const [local, others] = splitProps(merged, ['variant', 'disabled', 'class', 'children', 'onClick']);
 
   // Enhanced click handler with sound effect animation
-  const handleClick = (e: MouseEvent) => {
-    const target = e.currentTarget as HTMLButtonElement;
+  const handleClick = (e: MouseEvent & { currentTarget: HTMLButtonElement; target: Element }) => {
+    const target = e.currentTarget;
     
     // Add visual sound effect
     target.classList.add('win98-sound-effect');

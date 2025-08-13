@@ -11,7 +11,7 @@ export default function App() {
   const [playgroundComponent, setPlaygroundComponent] = createSignal<string | null>(null);
 
   // Error fallback component
-  const ErrorFallback = (err: any) => (
+  const ErrorFallback = (err: Error) => (
     <div style={{
       padding: '20px',
       'background-color': '#ffe6e6',
